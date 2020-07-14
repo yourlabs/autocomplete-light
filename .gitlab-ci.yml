@@ -1,0 +1,7 @@
+pages:
+  stage: build
+  image: node:alpine
+  script:
+  - npm install
+  - npm run-script build
+  - mv www public
