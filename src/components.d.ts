@@ -6,12 +6,26 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AutocompleteLight {
+        "boxContent": string;
+        "choiceSelector": string;
+        "minimumCharacters": number;
+        "value": string;
+    }
     interface MyComponent {
         "boxContent": string;
+        "choiceSelector": string;
+        "minimumCharacters": number;
         "value": string;
     }
 }
 declare global {
+    interface HTMLAutocompleteLightElement extends Components.AutocompleteLight, HTMLStencilElement {
+    }
+    var HTMLAutocompleteLightElement: {
+        prototype: HTMLAutocompleteLightElement;
+        new (): HTMLAutocompleteLightElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -19,15 +33,25 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "autocomplete-light": HTMLAutocompleteLightElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface AutocompleteLight {
+        "boxContent"?: string;
+        "choiceSelector"?: string;
+        "minimumCharacters"?: number;
+        "value"?: string;
+    }
     interface MyComponent {
         "boxContent"?: string;
+        "choiceSelector"?: string;
+        "minimumCharacters"?: number;
         "value"?: string;
     }
     interface IntrinsicElements {
+        "autocomplete-light": AutocompleteLight;
         "my-component": MyComponent;
     }
 }
@@ -35,6 +59,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "autocomplete-light": LocalJSX.AutocompleteLight & JSXBase.HTMLAttributes<HTMLAutocompleteLightElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }

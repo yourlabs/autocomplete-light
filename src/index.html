@@ -11,7 +11,18 @@
 </head>
 <body>
 
-  <my-component first="Stencil" last="'Don't call me a framework' JS"></my-component>
+  <autocomplete-light ></autocomplete-light>
+  <script>
+    document.querySelector('autocomplete-light').addEventListener(
+      'autocompleteChoiceSelected',
+      function(ev) {
+        console.log(
+          'Congratulations ! you selected: ',
+          ev.detail.choice.getAttribute('data-value'),
+        )
+      }
+    )
+  </script>
 
 </body>
 </html>

@@ -1,7 +1,0 @@
-:host {
-  display: relative;
-}
-
-:host .box {
-  display: absolute;
-}

@@ -1,38 +1,38 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { MyComponent } from './my-component';
+import { MyComponent } from './autocomplete-light';
 
-describe('my-component', () => {
+describe('autocomplete-light', () => {
   it('renders', async () => {
     const {root} = await newSpecPage({
       components: [MyComponent],
-      html: '<my-component></my-component>'
+      html: '<autocomplete-light></autocomplete-light>'
     });
     expect(root).toEqualHtml(`
-      <my-component>
+      <autocomplete-light>
         <mock:shadow-root>
           <span>
             <input type="text">
             <span class="box"></span>
           </span>
         </mock:shadow-root>
-      </my-component>
+      </autocomplete-light>
     `);
   });
 
   it('renders with values', async () => {
     const {root} = await newSpecPage({
       components: [MyComponent],
-      html: `<my-component value="test"></my-component>`
+      html: `<autocomplete-light value="test"></autocomplete-light>`
     });
     expect(root).toEqualHtml(`
-      <my-component value="test">
+      <autocomplete-light value="test">
         <mock:shadow-root>
           <span>
             <input type="text" value="test" />
             <span class="box"></span>
           </span>
         </mock:shadow-root>
-      </my-component>
+      </autocomplete-light>
     `);
   });
 });

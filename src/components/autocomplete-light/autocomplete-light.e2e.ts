@@ -1,22 +1,22 @@
 import { newE2EPage } from '@stencil/core/testing';
 
-describe('my-component', () => {
+describe('autocomplete-light', () => {
   it('renders', async () => {
     const page = await newE2EPage();
 
-    await page.setContent('<my-component></my-component>');
-    const element = await page.find('my-component');
+    await page.setContent('<autocomplete-light></autocomplete-light>');
+    const element = await page.find('autocomplete-light');
     expect(element).toHaveClass('hydrated');
   });
 
   it('renders changes to the value', async () => {
     const page = await newE2EPage();
 
-    await page.setContent('<my-component></my-component>');
-    const component = await page.find('my-component');
+    await page.setContent('<autocomplete-light></autocomplete-light>');
+    const component = await page.find('autocomplete-light');
     expect(await component.getProperty('value')).toBe(undefined);
 
-    const input = await page.find('my-component >>> input');
+    const input = await page.find('autocomplete-light >>> input');
     expect(await input.getAttribute('value')).toBe(null);
 
     component.setProperty('value', 'test');
