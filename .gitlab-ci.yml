@@ -5,3 +5,6 @@ pages:
   - npm install
   - npm run-script build
   - mv www public
+  artifacts:
+    paths:
+    - public
