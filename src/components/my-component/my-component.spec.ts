@@ -12,6 +12,7 @@ describe('my-component', () => {
         <mock:shadow-root>
           <span>
             <input type="text">
+            <span class="box"></span>
           </span>
         </mock:shadow-root>
       </my-component>
@@ -28,6 +29,7 @@ describe('my-component', () => {
         <mock:shadow-root>
           <span>
             <input type="text" value="test" />
+            <span class="box"></span>
           </span>
         </mock:shadow-root>
       </my-component>
