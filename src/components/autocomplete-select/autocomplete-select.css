@@ -10,3 +10,7 @@
   width: 1px !important;
   white-space: nowrap !important;
 }
+
+:host .deck {
+  display: block;
+}

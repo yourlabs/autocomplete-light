@@ -9,15 +9,22 @@ export class AutocompleteLight {
   @Prop({
     mutable: true,
     reflect: true
-  }) value: string
-  @Prop() boxContent: string
+  }) value = ''
+  @Prop({
+    mutable: true,
+    reflect: true
+  }) hide = true
+  @Prop({
+    mutable: true,
+    reflect: true
+  }) boxContent: string
   @Prop() choiceSelector = '[data-value]'
   @Prop() minimumCharacters = 1
+  @Prop() url: string
   @Element() el: HTMLElement
 
   xhr: XMLHttpRequest
   timeoutId: number
-  url: string
   bound = false
 
   onChoiceMouseEnter(ev: any) {
@@ -40,7 +47,7 @@ export class AutocompleteLight {
   selectChoice(choice: any) {
     this.value = choice.innerHTML
     this.trigger('autocompleteChoiceSelected', {choice})
-    this.hide()
+    this.hide = true
   }
 
   trigger(eventName, data) {
@@ -103,24 +110,12 @@ export class AutocompleteLight {
     this.boxContent = ev.target.response
   }
 
-  hide() {
-    this.box.classList.add('hidden')
-  }
-
-  show() {
-    this.box.classList.remove('hidden')
-  }
-
-  get visible() {
-    return ! this.box.classList.contains('hidden')
-  }
-
   onInputFocus() {
-    this.show()
+    this.hide = false
   }
 
   onInputBlur() {
-    this.hide()
+    this.hide = true
   }
 
   move(ev: any) {
@@ -153,7 +148,7 @@ export class AutocompleteLight {
 
     // The autocomplete must be shown so that the user sees what choice
     // he is hilighting.
-    this.show();
+    this.hide = false;
 
     // If a choice is currently hilighted:
     if (current) {
@@ -183,7 +178,7 @@ export class AutocompleteLight {
 
       case 9: // tab
       case 13: // enter
-        if (!this.visible) return
+        if (this.hide) return
 
         var choice = this.box.querySelector('.hilight');
 
@@ -200,8 +195,7 @@ export class AutocompleteLight {
         break
 
       case 27: // escape
-        if (!this.visible) return
-        this.hide()
+        this.hide = true
         break
 
       default:
@@ -212,7 +206,7 @@ export class AutocompleteLight {
   refresh() {
     if (!this.value) return
     if (this.value.length < this.minimumCharacters)
-      this.hide()
+      this.hide = true
     else
       this.download()
   }
@@ -226,25 +220,25 @@ export class AutocompleteLight {
     }
 
     this.box.querySelectorAll(this.choiceSelector).forEach((item) => {
+      if (item.getAttribute('data-bound')) return
       item.addEventListener('mouseenter', this.onChoiceMouseEnter.bind(this))
       item.addEventListener('mouseleave', this.onChoiceMouseLeave.bind(this))
       item.addEventListener('mousedown', this.onChoiceMouseDown.bind(this))
+      item.setAttribute('data-bound', 'true')
     })
   }
 
   render() {
-    var clearClass = 'clear'
-    if (!this.value)
-      clearClass += ' hidden'
     return <span class="container">
       <input
         type="text"
         value={this.value}
         onInput={this.onInput.bind(this)}
       />
-      <span class={clearClass} onClick={() => this.value = ''}>✖</span>
+      <span class="clear" hidden={!this.value.length} onClick={() => this.value = ''}>✖</span>
       <span
-        class="box hidden"
+        class="box"
+        hidden={this.hide}
         innerHTML={this.boxContent}
       />
     </span>;

@@ -9,13 +9,15 @@ export class AutocompleteSelect {
   @Element() el: HTMLElement
   @Prop() name: string
   @Prop({
-    mutable: true
+    mutable: true,
+    reflect: true
   }) values: Array<any>
-  @Prop() maxChoices: any
+  @Prop() maxChoices = 0
+  @Prop() multiple = false
   bound = false
 
   connectedCallback() {
-    if (!this.el.getAttribute('multiple')) {
+    if (!this.multiple) {
       this.maxChoices = 1
     }
     this.values = Array.from(this.el.querySelectorAll('[selected]')).map(
@@ -82,7 +84,7 @@ export class AutocompleteSelect {
           </span>
         ))}
       </span>
-      <autocomplete-light />
+      <autocomplete-light hidden={this.maxChoices && this.values.length >= this.maxChoices}/>
     </Host>;
   }
 }

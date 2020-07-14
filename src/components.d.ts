@@ -9,11 +9,14 @@ export namespace Components {
     interface AutocompleteLight {
         "boxContent": string;
         "choiceSelector": string;
+        "hide": boolean;
         "minimumCharacters": number;
+        "url": string;
         "value": string;
     }
     interface AutocompleteSelect {
-        "maxChoices": any;
+        "maxChoices": number;
+        "multiple": boolean;
         "name": string;
         "values": Array<any>;
     }
@@ -40,11 +43,14 @@ declare namespace LocalJSX {
     interface AutocompleteLight {
         "boxContent"?: string;
         "choiceSelector"?: string;
+        "hide"?: boolean;
         "minimumCharacters"?: number;
+        "url"?: string;
         "value"?: string;
     }
     interface AutocompleteSelect {
-        "maxChoices"?: any;
+        "maxChoices"?: number;
+        "multiple"?: boolean;
         "name"?: string;
         "values"?: Array<any>;
     }
