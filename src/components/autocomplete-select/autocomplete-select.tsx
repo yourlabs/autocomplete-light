@@ -1,5 +1,4 @@
-import { Component, Element, Host, h } from '@stencil/core'
-import { AutocompleteLight } from '../autocomplete-light/autocomplete-light'
+import { Component, Element, Host, Prop, h } from '@stencil/core'
 
 @Component({
   tag: 'autocomplete-select',
@@ -7,14 +6,26 @@ import { AutocompleteLight } from '../autocomplete-light/autocomplete-light'
 })
 export class AutocompleteSelect {
   @Element() el: HTMLElement
+  @Prop({
+    mutable: true
+  }) value: string
 
   connectedCallback() {
-    console.log(this.el)
+    var value = this.el.querySelector('[selected]')
+    if (value) {
+      this.value = value.getAttribute('value')
+    }
+  }
+
+  get deck() {
+    return this.el.shadowRoot.querySelector('.deck')
   }
 
   render() {
     return <Host>
-      <AutocompleteLight />
+      <span class="deck">
+        <autocomplete-light />
+      </span>
     </Host>;
   }
 }

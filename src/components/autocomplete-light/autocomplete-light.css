@@ -9,12 +9,28 @@
   z-index: 99;
   top: 100%;
   left: 0;
+  background-color: white;
+}
+
+:host input {
+  padding-right: 16px;
+  box-sizing: border-box;
+}
+
+:host .clear {
+  position: absolute;
+  display: block;
+  top: 1px;  /* compensate for input border */
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
 .hilight {
-  background-color: blue;
+  background-color: lightgrey;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }

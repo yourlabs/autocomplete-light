@@ -232,12 +232,16 @@ export class AutocompleteLight {
   }
 
   render() {
+    var clearClass = 'clear'
+    if (!this.value)
+      clearClass += ' hidden'
     return <span class="container">
       <input
         type="text"
         value={this.value}
         onInput={this.onInput.bind(this)}
       />
+      <span class={clearClass} onClick={() => this.value = ''}>✖</span>
       <span
         class="box hidden"
         innerHTML={this.boxContent}

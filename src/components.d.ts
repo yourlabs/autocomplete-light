@@ -13,6 +13,7 @@ export namespace Components {
         "value": string;
     }
     interface AutocompleteSelect {
+        "value": string;
     }
 }
 declare global {
@@ -41,6 +42,7 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface AutocompleteSelect {
+        "value"?: string;
     }
     interface IntrinsicElements {
         "autocomplete-light": AutocompleteLight;
