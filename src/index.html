@@ -11,7 +11,9 @@
 </head>
 <body>
 
-  <autocomplete-light ></autocomplete-light>
+  <h2>autocomplete-light</h2>
+  <p>Check teh HTML source for usage</p>
+  <autocomplete-light></autocomplete-light>
   <script>
     document.querySelector('autocomplete-light').addEventListener(
       'autocompleteChoiceSelected',
@@ -23,6 +25,11 @@
       }
     )
   </script>
+
+  <h2>autocomplete-select</h2>
+  <autocomplete-select>
+    <option value="aaa" selected="selected">aaa (preselected)</option>
+  </autocomplete-select>
 
 </body>
 </html>

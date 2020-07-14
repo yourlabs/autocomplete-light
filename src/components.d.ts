@@ -13,10 +13,6 @@ export namespace Components {
         "value": string;
     }
     interface AutocompleteSelect {
-        "boxContent": string;
-        "choiceSelector": string;
-        "minimumCharacters": number;
-        "value": string;
     }
 }
 declare global {
@@ -45,10 +41,6 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface AutocompleteSelect {
-        "boxContent"?: string;
-        "choiceSelector"?: string;
-        "minimumCharacters"?: number;
-        "value"?: string;
     }
     interface IntrinsicElements {
         "autocomplete-light": AutocompleteLight;
