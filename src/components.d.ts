@@ -13,7 +13,9 @@ export namespace Components {
         "value": string;
     }
     interface AutocompleteSelect {
-        "value": string;
+        "maxChoices": any;
+        "name": string;
+        "values": Array<any>;
     }
 }
 declare global {
@@ -42,7 +44,9 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface AutocompleteSelect {
-        "value"?: string;
+        "maxChoices"?: any;
+        "name"?: string;
+        "values"?: Array<any>;
     }
     interface IntrinsicElements {
         "autocomplete-light": AutocompleteLight;

@@ -2,30 +2,83 @@ import { Component, Element, Host, Prop, h } from '@stencil/core'
 
 @Component({
   tag: 'autocomplete-select',
+  styleUrl: 'autocomplete-select.css',
   shadow: true
 })
 export class AutocompleteSelect {
   @Element() el: HTMLElement
+  @Prop() name: string
   @Prop({
     mutable: true
-  }) value: string
+  }) values: Array<any>
+  @Prop() maxChoices: any
+  bound = false
 
   connectedCallback() {
-    var value = this.el.querySelector('[selected]')
-    if (value) {
-      this.value = value.getAttribute('value')
+    if (!this.el.getAttribute('multiple')) {
+      this.maxChoices = 1
     }
+    this.values = Array.from(this.el.querySelectorAll('[selected]')).map(
+      (item) => [item.getAttribute('value'), item.innerHTML]
+    )
   }
 
   get deck() {
     return this.el.shadowRoot.querySelector('.deck')
   }
 
+  get select() {
+    return this.el.shadowRoot.querySelector('select')
+  }
+
+  get autocomplete() {
+    return this.el.shadowRoot.querySelector('autocomplete-light')
+  }
+
+  onClearClick(ev: any) {
+    this.choiceUnselect(ev.target.parentNode)
+  }
+
+  choiceUnselect(choice: any) {
+    this.values = this.values.filter(
+      (item) => item[0] != choice.getAttribute('data-value')
+    )
+  }
+
+  componentDidRender() {
+    if (!this.bound) {
+      this.autocomplete.addEventListener(
+        'autocompleteChoiceSelected',
+        (ev: any) => this.values = [
+          ...this.values,
+          [
+            ev.detail.choice.getAttribute('data-value'),
+            ev.detail.choice.innerHTML,
+          ]
+        ]
+      )
+      this.bound = true
+    }
+  }
+
   render() {
     return <Host>
+      <select name={this.name}>
+        {this.values.map((item) => (
+          <option value={item[0]} selected>
+            {item[1]}
+          </option>
+        ))}
+      </select>
       <span class="deck">
-        <autocomplete-light />
+        {this.values.map((item) => (
+          <span data-value={item[0]}>
+            {item[1]}
+            <span class="clear" onClick={this.onClearClick.bind(this)}>✖</span>
+          </span>
+        ))}
       </span>
+      <autocomplete-light />
     </Host>;
   }
 }

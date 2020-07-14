@@ -38,6 +38,7 @@ export class AutocompleteLight {
   }
 
   selectChoice(choice: any) {
+    this.value = choice.innerHTML
     this.trigger('autocompleteChoiceSelected', {choice})
     this.hide()
   }
