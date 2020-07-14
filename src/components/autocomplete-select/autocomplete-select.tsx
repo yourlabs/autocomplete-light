@@ -45,17 +45,21 @@ export class AutocompleteSelect {
     )
   }
 
+  choiceSelect(choice: any) {
+    this.values = [
+      ...this.values,
+      [
+        choice.getAttribute('data-value'),
+        choice.innerHTML,
+      ]
+    ]
+  }
+
   componentDidRender() {
     if (!this.bound) {
       this.autocomplete.addEventListener(
         'autocompleteChoiceSelected',
-        (ev: any) => this.values = [
-          ...this.values,
-          [
-            ev.detail.choice.getAttribute('data-value'),
-            ev.detail.choice.innerHTML,
-          ]
-        ]
+        (ev: any) => this.choiceSelect(ev.detail.choice)
       )
       this.bound = true
     }
