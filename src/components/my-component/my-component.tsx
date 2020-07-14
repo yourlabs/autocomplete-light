@@ -10,24 +10,30 @@ export class MyComponent {
     mutable: true,
     reflect: true
   }) value: string
+  @Prop() boxContent: string
+
   xhr: XMLHttpRequest
   timeoutId: number
 
   input(ev: any) {
     this.value = ev.target.value
-
-    this.xhr && this.xhr.readyState === 0 && this.xhr.abort();
+    // clear any unset xhr
+    this.xhr && this.xhr.readyState === 0 && this.xhr.abort()
+    // clear any planned xhr
     this.timeoutId && window.clearTimeout(this.timeoutId)
-    this.timeoutId = window.setTimeout(() => this.download(), 200)
+    // plan an xhr
+    this.timeoutId = window.setTimeout(this.download.bind(this), 200)
   }
 
   download() {
     this.xhr = new XMLHttpRequest()
-    this.xhr.addEventListener('load', function() {
-      console.log(this.responseText)
-    })
-    this.xhr.open('GET', 'https://api.github.com/users/jpic/orgs')
+    this.xhr.addEventListener('load', this.receive.bind(this))
+    this.xhr.open('GET', 'https://www.mrs.beta.gouv.fr/institution/310000000/mrsrequest/iframe/?origin=http://localhost:3333/')
     this.xhr.send()
+  }
+
+  receive(ev: any) {
+    this.boxContent = ev.target.response
   }
 
   render() {
@@ -35,9 +41,9 @@ export class MyComponent {
       <input
         type="text"
         value={this.value}
-        onInput={this.input}
+        onInput={this.input.bind(this)}
       />
-      <span class="box"></span>
+      <span class="box" innerHTML={this.boxContent} />
     </span>;
   }
 }

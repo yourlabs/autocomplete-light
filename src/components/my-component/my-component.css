@@ -1,3 +1,7 @@
 :host {
-  display: block;
+  display: relative;
+}
+
+:host .box {
+  display: absolute;
 }
