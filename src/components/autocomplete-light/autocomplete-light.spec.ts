@@ -1,10 +1,10 @@
 import { newSpecPage } from '@stencil/core/testing';
-import { MyComponent } from './autocomplete-light';
+import { AutocompleteLight } from './autocomplete-light';
 
 describe('autocomplete-light', () => {
   it('renders', async () => {
     const {root} = await newSpecPage({
-      components: [MyComponent],
+      components: [AutocompleteLight],
       html: '<autocomplete-light></autocomplete-light>'
     });
     expect(root).toEqualHtml(`
@@ -21,7 +21,7 @@ describe('autocomplete-light', () => {
 
   it('renders with values', async () => {
     const {root} = await newSpecPage({
-      components: [MyComponent],
+      components: [AutocompleteLight],
       html: `<autocomplete-light value="test"></autocomplete-light>`
     });
     expect(root).toEqualHtml(`

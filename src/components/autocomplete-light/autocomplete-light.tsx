@@ -5,7 +5,7 @@ import { Component, Element, Prop, h } from '@stencil/core';
   styleUrl: 'autocomplete-light.css',
   shadow: true
 })
-export class MyComponent {
+export class AutocompleteLight {
   @Prop({
     mutable: true,
     reflect: true

@@ -16,9 +16,9 @@
     document.querySelector('autocomplete-light').addEventListener(
       'autocompleteChoiceSelected',
       function(ev) {
-        console.log(
-          'Congratulations ! you selected: ',
-          ev.detail.choice.getAttribute('data-value'),
+        alert(
+          'Congratulations ! you selected: '
+          + ev.detail.choice.getAttribute('data-value')
         )
       }
     )
