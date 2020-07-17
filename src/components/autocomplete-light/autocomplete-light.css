@@ -20,7 +20,7 @@
 .autocomplete-light .clear {
   position: absolute;
   display: block;
-  top: 1px;  /* compensate for input border */
+  top: 2px;  /* compensate for input border */
   right: 0;
   width: 16px;
   height: 16px;
