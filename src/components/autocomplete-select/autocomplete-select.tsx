@@ -2,8 +2,7 @@ import { Component, Element, Host, Prop, h } from '@stencil/core'
 
 @Component({
   tag: 'autocomplete-select',
-  styleUrl: 'autocomplete-select.css',
-  shadow: true
+  styleUrl: 'autocomplete-select.css'
 })
 export class AutocompleteSelect {
   @Element() el: HTMLElement
@@ -26,15 +25,15 @@ export class AutocompleteSelect {
   }
 
   get deck() {
-    return this.el.shadowRoot.querySelector('.deck')
+    return this.el.querySelector('.deck')
   }
 
   get select() {
-    return this.el.shadowRoot.querySelector('select')
+    return this.el.querySelector('select')
   }
 
   get autocomplete() {
-    return this.el.shadowRoot.querySelector('autocomplete-light')
+    return this.el.querySelector('autocomplete-light')
   }
 
   onClearClick(ev: any) {
@@ -68,7 +67,7 @@ export class AutocompleteSelect {
   }
 
   render() {
-    return <Host>
+    return <Host class="autocomplete-select">
       <select name={this.name}>
         {this.values.map((item) => (
           <option value={item[0]} selected>

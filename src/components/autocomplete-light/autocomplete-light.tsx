@@ -1,9 +1,8 @@
-import { Component, Element, Prop, h } from '@stencil/core';
+import { Component, Element, Host, Prop, h } from '@stencil/core';
 
 @Component({
   tag: 'autocomplete-light',
-  styleUrl: 'autocomplete-light.css',
-  shadow: true
+  styleUrl: 'autocomplete-light.css'
 })
 export class AutocompleteLight {
   @Prop({
@@ -21,6 +20,8 @@ export class AutocompleteLight {
   @Prop() choiceSelector = '[data-value]'
   @Prop() minimumCharacters = 1
   @Prop() url: string
+  @Prop() classInput = 'vTextField'
+  @Prop() classBox = 'box'
   @Element() el: HTMLElement
 
   xhr: XMLHttpRequest
@@ -91,19 +92,19 @@ export class AutocompleteLight {
   }
 
   get input() {
-    return this.el.shadowRoot.querySelector('input[type=text]')
+    return this.el.querySelector('input[type=text]')
   }
 
   get box() {
-    return this.el.shadowRoot.querySelector('.box')
+    return this.el.querySelector('.box')
   }
 
   get choices() {
-    return Array.from(this.el.shadowRoot.querySelectorAll(this.choiceSelector))
+    return Array.from(this.el.querySelectorAll(this.choiceSelector))
   }
 
   get selected() {
-    return this.el.shadowRoot.querySelectorAll(this.choiceSelector + '.hilight')
+    return this.el.querySelectorAll(this.choiceSelector + '.hilight')
   }
 
   receive(ev: any) {
@@ -229,18 +230,19 @@ export class AutocompleteLight {
   }
 
   render() {
-    return <span class="container">
-      <input
-        type="text"
-        value={this.value}
-        onInput={this.onInput.bind(this)}
-      />
-      <span class="clear" hidden={!this.value.length} onClick={() => this.value = ''}>✖</span>
-      <span
-        class="box"
-        hidden={this.hide}
-        innerHTML={this.boxContent}
-      />
-    </span>;
+    return <Host class="autocomplete-light">
+        <input
+          type="text"
+          value={this.value}
+          onInput={this.onInput.bind(this)}
+          class={this.classInput}
+        />
+        <span class="clear" hidden={!this.value.length} onClick={() => this.value = ''}>✖</span>
+        <span
+          class={this.classBox}
+          hidden={this.hide}
+          innerHTML={this.boxContent}
+        />
+      </Host>;
   }
 }

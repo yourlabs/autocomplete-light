@@ -1,4 +1,4 @@
-:host select {
+.autocomplete-select select {
   border: 0 !important;
   clip: rect(0 0 0 0) !important;
   -webkit-clip-path: inset(50%) !important;
@@ -11,6 +11,6 @@
   white-space: nowrap !important;
 }
 
-:host .deck {
+.autocomplete-select .deck {
   display: block;
 }

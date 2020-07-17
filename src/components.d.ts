@@ -9,6 +9,8 @@ export namespace Components {
     interface AutocompleteLight {
         "boxContent": string;
         "choiceSelector": string;
+        "classBox": string;
+        "classInput": string;
         "hide": boolean;
         "minimumCharacters": number;
         "url": string;
@@ -43,6 +45,8 @@ declare namespace LocalJSX {
     interface AutocompleteLight {
         "boxContent"?: string;
         "choiceSelector"?: string;
+        "classBox"?: string;
+        "classInput"?: string;
         "hide"?: boolean;
         "minimumCharacters"?: number;
         "url"?: string;
