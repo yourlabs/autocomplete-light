@@ -13,28 +13,39 @@
 
   <h2>autocomplete-light</h2>
   <p>Check teh HTML source for usage</p>
-  <autocomplete-light id="input-simple"></autocomplete-light>
+  <autocomplete-light id="input-simple">
+    <input slot="input" type="text" />
+  </autocomplete-light>
   <script>
     document.querySelector('#input-simple').addEventListener(
       'autocompleteChoiceSelected',
       function(ev) {
-        alert(
-          'Congratulations ! you selected: '
-          + ev.detail.choice.getAttribute('data-value')
-        )
+        this.querySelector('input').value = ev.detail.choice.getAttribute('data-value')
       }
     )
   </script>
 
   <h2>autocomplete-select</h2>
   <autocomplete-select>
-    <option value="aaa" selected>aaa</option>
+    <select slot="select" name="simple"></select>
+    <div slot="deck">
+      <div data-value="aaa" selected>aaa</div>
+    </div>
+    <autocomplete-light slot="input">
+      <input slot="input" type="text" />
+    </autocomplete-light>
   </autocomplete-select>
 
   <h2>autocomplete-select multiple</h2>
   <autocomplete-select multiple>
-    <option value="aaa" selected>aaa</option>
-    <option value="bbb" selected>bbb</option>
+    <select slot="select" name="multiple" multiple></select>
+    <div slot="deck">
+      <div data-value="aaa" selected>aaa</div>
+      <div data-value="bbb" selected>bbb</div>
+    </div>
+    <autocomplete-light slot="input">
+      <input slot="input" type="text" />
+    </autocomplete-light>
   </autocomplete-select>
 
 </body>

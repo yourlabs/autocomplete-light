@@ -13,27 +13,33 @@ export class AutocompleteSelect {
   }) values: Array<any>
   @Prop() maxChoices = 0
   @Prop() multiple = false
+  @Prop() url: string
   bound = false
 
   connectedCallback() {
     if (!this.multiple) {
       this.maxChoices = 1
     }
-    this.values = Array.from(this.el.querySelectorAll('[selected]')).map(
-      (item) => [item.getAttribute('value'), item.innerHTML]
-    )
+
+    Array.from(
+      this.deck.querySelectorAll('[data-value]')
+    ).map((item) => this.addClear(item))
   }
 
   get deck() {
-    return this.el.querySelector('.deck')
+    return this.el.querySelector('[slot=deck]')
   }
 
   get select() {
-    return this.el.querySelector('select')
+    return this.el.querySelector('[slot=select]')
   }
 
-  get autocomplete() {
-    return this.el.querySelector('autocomplete-light')
+  get selected() {
+    return this.deck.querySelectorAll('[data-value]')
+  }
+
+  get input() {
+    return this.el.querySelector('[slot=input]')
   }
 
   onClearClick(ev: any) {
@@ -41,24 +47,50 @@ export class AutocompleteSelect {
   }
 
   choiceUnselect(choice: any) {
-    this.values = this.values.filter(
-      (item) => item[0] != choice.getAttribute('data-value')
-    )
+    var value = choice.getAttribute('data-value')
+
+    var option = this.select.querySelector('option[value="' + value + '"]')
+    if (option) {
+      option.parentNode.removeChild(option)
+    }
+
+    var decked = this.deck.querySelector('[data-value="' + value + '"]')
+    if (decked) {
+      decked.parentNode.removeChild(decked)
+    }
   }
 
   choiceSelect(choice: any) {
-    this.values = [
-      ...this.values,
-      [
-        choice.getAttribute('data-value'),
-        choice.innerHTML,
-      ]
-    ]
+    if (this.maxChoices && this.selected.length >= this.maxChoices) {
+      this.choiceUnselect(this.selected[0])
+    }
+
+    // insert option in select
+    var option = document.createElement('option')
+    option.setAttribute('value', choice.getAttribute('data-value'))
+    option.setAttribute('selected', 'selected')
+    this.select.appendChild(option)
+
+    // insert choice on deck, based on a choice node clone
+    choice = choice.cloneNode(9)
+    choice.classList.remove('hilight')
+    this.addClear(choice)
+    this.deck.appendChild(choice)
+  }
+
+  addClear(choice: any) {
+    if (choice.querySelector('.clear'))
+      return
+    var clear = document.createElement('span')
+    clear.classList.add('clear')
+    clear.addEventListener('click', this.onClearClick.bind(this))
+    clear.innerHTML = '✖'
+    choice.appendChild(clear)
   }
 
   componentDidRender() {
     if (!this.bound) {
-      this.autocomplete.addEventListener(
+      this.input.addEventListener(
         'autocompleteChoiceSelected',
         (ev: any) => this.choiceSelect(ev.detail.choice)
       )
@@ -68,22 +100,9 @@ export class AutocompleteSelect {
 
   render() {
     return <Host class="autocomplete-select">
-      <select name={this.name}>
-        {this.values.map((item) => (
-          <option value={item[0]} selected>
-            {item[1]}
-          </option>
-        ))}
-      </select>
-      <span class="deck">
-        {this.values.map((item) => (
-          <span data-value={item[0]}>
-            {item[1]}
-            <span class="clear" onClick={this.onClearClick.bind(this)}>✖</span>
-          </span>
-        ))}
-      </span>
-      <autocomplete-light hidden={this.maxChoices && this.values.length >= this.maxChoices}/>
+      <slot name="select" />
+      <slot name="deck" />
+      <slot name="input" />
     </Host>;
   }
 }

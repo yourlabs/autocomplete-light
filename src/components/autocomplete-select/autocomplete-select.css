@@ -11,6 +11,10 @@ autocomplete-select select {
   white-space: nowrap !important;
 }
 
-.autocomplete-select .deck {
+autocomplete-select .deck {
   display: block;
+}
+
+autocomplete-option {
+  display: none;
 }
