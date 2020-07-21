@@ -1,29 +1,50 @@
 import { Component, Element, Host, Prop, h } from '@stencil/core';
 
 
-@Component({
-  tag: 'autocomplete-light',
-  styleUrl: 'autocomplete-light.css'
-})
-export class AutocompleteLight {
-  @Prop({
-    mutable: true,
-    reflect: true
-  }) value = ''
-  @Prop() choiceSelector = '[data-value]'
-  @Prop() minimumCharacters = 1
-  @Prop() url: string
-  @Prop() classInput = 'vTextField'
-  @Prop() classBox = 'box'
-  @Element() el: HTMLElement
-
+class AutocompleteMachine {
   xhr: XMLHttpRequest
   timeoutId: number
-  bound = false
-  boxElement: any
+  input: HTMLInputElement
+  box: HTMLElement
+  host: HTMLElement
+  options: {}
 
-  onChoiceMouseEnter(ev: any) {
-    this.hilight(ev.target)
+  constructor(host, input, options) {
+    this.host = host
+    this.input = input
+    this.options = options
+
+    if (!this.box) {
+      this.box = document.createElement('div')
+      this.box.classList.add('autocomplete-light-box')
+      window.addEventListener('resize', this.draw.bind(this))
+      document.querySelector('body').appendChild(this.box)
+    }
+
+    if (!this.input.getAttribute('data-bound'))
+      return
+
+    this.host.input.addEventListener(
+      'blur',
+      () => this.box.setAttribute('hidden', 'true')
+    )
+    this.host.input.addEventListener(
+      'focus',
+      () => this.box.removeAttribute('hidden')
+    )
+    this.host.input.addEventListener('keyup', this.keyboard.bind(this))
+    this.host.input.addEventListener(
+      'input', () => {
+          console.log('HELLO')
+        // clear any unset xhr
+        this.xhr && this.xhr.readyState === 0 && this.xhr.abort()
+        // clear any planned xhr
+        this.timeoutId && window.clearTimeout(this.timeoutId)
+        // plan an xhr
+        this.timeoutId = window.setTimeout(this.download.bind(this), 200)
+      }
+    )
+    this.host.input.setAttribute('data-bound', 'true')
   }
 
   hilight(choice: any) {
@@ -31,51 +52,32 @@ export class AutocompleteLight {
     choice.classList.add('hilight')
   }
 
-  onChoiceMouseLeave(ev: any) {
-    ev.target.classList.remove('hilight')
-  }
-
-  onChoiceMouseDown(ev: any) {
-    this.selectChoice(ev.target)
-  }
-
   selectChoice(choice: any) {
-    this.trigger('autocompleteChoiceSelected', {choice})
-    this.hide()
-  }
-
-  trigger(eventName, data) {
+    let eventName = 'autocompleteChoiceSelected'
+    let data = {choice}
     if (window.CustomEvent && typeof window.CustomEvent === 'function') {
       var event = new CustomEvent(eventName, {detail: data});
+      this.host.dispatchEvent(event)
     } else {
-      var event = document.createEvent('CustomEvent');
-      event.initCustomEvent(eventName, true, true, data);
+      var event2 = document.createEvent('CustomEvent');
+      event2.initCustomEvent(eventName, true, true, data);
+      this.host.dispatchEvent(event2)
     }
-    this.el.dispatchEvent(event)
-  }
-
-  onInput(ev: any) {
-    this.value = ev.target.value
-    // clear any unset xhr
-    this.xhr && this.xhr.readyState === 0 && this.xhr.abort()
-    // clear any planned xhr
-    this.timeoutId && window.clearTimeout(this.timeoutId)
-    // plan an xhr
-    this.timeoutId = window.setTimeout(this.download.bind(this), 200)
+    this.box.setAttribute('hidden', 'true')
   }
 
   download() {
-    if (this.url) {
+    if (this.options.url) {
       this.xhr = new XMLHttpRequest()
       this.xhr.addEventListener('load', this.receive.bind(this))
-      this.xhr.open('GET', this.url)
+      this.xhr.open('GET', this.options.url)
       this.xhr.send()
     } else {
       // test mode
       this.receive({
         target: {
           response: ['aaa', 'aab', 'abb', 'bbb'].filter(
-            (item) => item.startsWith(this.value)
+            (item) => item.startsWith(this.input.value)
           ).map(
               (item) => `<div data-value="${item}">${item}</div>`
           ).join('\n'),
@@ -84,71 +86,44 @@ export class AutocompleteLight {
     }
   }
 
-  get input() {
-    console.log('tst')
-    return this.el.querySelector('input[type=text]')
-  }
 
-  get box() {
-    if (!this.boxElement) {
-      this.boxElement = document.createElement('div')
-      this.boxElement.classList.add('autocomplete-light-box')
-      window.addEventListener('resize', this.position.bind(this))
-      document.querySelector('body').appendChild(this.boxElement)
+  keyboard(ev: any) {
+    switch(ev.keyCode) {
+      case 40: // down arrow
+      case 38: // up arrow
+      case 16: // shift
+      case 17: // ctrl
+      case 18: // alt
+        this.move(ev);
+        break;
+
+      case 9: // tab
+      case 13: // enter
+        if (!this.box.getAttribute('hidden')) return
+
+        var choice = this.box.querySelector('.hilight');
+
+        if (!choice) {
+            // Don't get in the way, let the browser submit form or focus
+            // on next element.
+            return
+        }
+
+        ev.preventDefault()
+        ev.stopPropagation()
+
+        this.selectChoice(choice)
+        break
+
+      case 27: // escape
+        this.box.setAttribute('hidden', 'true')
+        break
     }
-    return this.boxElement
-  }
-
-  position() {
-    var rect = this.input.getBoundingClientRect()
-    this.boxElement.style.top = rect.bottom + 'px'
-    this.boxElement.style.left = rect.left + 'px'
-    this.boxElement.style.width = rect.width + 'px'
-  }
-
-  get choices() {
-    return Array.from(this.box.querySelectorAll(this.choiceSelector))
-  }
-
-  get selected() {
-    return this.box.querySelectorAll(this.choiceSelector + '.hilight')
-  }
-
-  receive(ev: any) {
-    this.position()
-    this.box.innerHTML = ev.target.response
-    this.box.querySelectorAll(this.choiceSelector).forEach((item) => {
-      if (item.getAttribute('data-bound')) return
-      item.addEventListener('mouseenter', this.onChoiceMouseEnter.bind(this))
-      item.addEventListener('mouseleave', this.onChoiceMouseLeave.bind(this))
-      item.addEventListener('mousedown', this.onChoiceMouseDown.bind(this))
-      item.setAttribute('data-bound', 'true')
-    })
-  }
-
-  hide() {
-    this.box.setAttribute('hidden', 'true')
-  }
-
-  show() {
-    this.box.removeAttribute('hidden')
-  }
-
-  visible() {
-    this.box.getAttribute('hidden')
-  }
-
-  onInputFocus() {
-    this.show()
-  }
-
-  onInputBlur() {
-    this.hide()
   }
 
   move(ev: any) {
     // If the autocomplete should not be displayed then return.
-    if (this.value.length < this.minimumCharacters) return true;
+    if (this.input.value.length < this.options.minimumCharacters) return true;
 
     // Avoid moving the cursor in the input.
     ev.preventDefault()
@@ -176,7 +151,7 @@ export class AutocompleteLight {
 
     // The autocomplete must be shown so that the user sees what choice
     // he is hilighting.
-    this.show();
+    this.box.removeAttribute('hidden')
 
     // If a choice is currently hilighted:
     if (current) {
@@ -194,62 +169,76 @@ export class AutocompleteLight {
     this.hilight(target)
   }
 
-  onInputKeyup(ev: any) {
-    switch(ev.keyCode) {
-      case 40: // down arrow
-      case 38: // up arrow
-      case 16: // shift
-      case 17: // ctrl
-      case 18: // alt
-        this.move(ev);
-        break;
-
-      case 9: // tab
-      case 13: // enter
-        if (!this.visible) return
-
-        var choice = this.box.querySelector('.hilight');
-
-        if (!choice) {
-            // Don't get in the way, let the browser submit form or focus
-            // on next element.
-            return
-        }
-
-        ev.preventDefault()
-        ev.stopPropagation()
-
-        this.selectChoice(choice)
-        break
-
-      case 27: // escape
-        this.hide()
-        break
-    }
+  get choices() {
+    return Array.from(this.box.querySelectorAll(this.options.choiceSelector))
   }
 
-  refresh() {
-    if (!this.value) return
-    if (this.value.length < this.minimumCharacters)
-      this.hide()
-    else
-      this.download()
+  get selected() {
+    return this.box.querySelectorAll(this.options.choiceSelector + '.hilight')
   }
 
-  componentDidRender() {
-    if (this.input !== null && !this.input.getAttribute('data-bound')) {
-      this.input.addEventListener('blur', this.onInputBlur.bind(this))
-      this.input.addEventListener('focus', this.onInputFocus.bind(this))
-      this.input.addEventListener('keyup', this.onInputKeyup.bind(this))
-      this.input.addEventListener('input', this.onInput.bind(this))
-      this.input.setAttribute('data-bound', 'true')
-    }
+  receive(ev: any) {
+    this.draw()
+    this.box.innerHTML = ev.target.response
+    this.box.querySelectorAll(this.options.choiceSelector).forEach((item) => {
+      // item idempotence
+      if (item.getAttribute('data-bound'))
+        return
+
+      // bind mouse events
+      item.addEventListener(
+        'mouseenter',
+        (ev: any) => this.hilight(ev.target)
+      )
+      item.addEventListener(
+        'mouseleave',
+        (ev: any) => ev.target.classList.remove('hilight')
+      )
+      item.addEventListener(
+        'mousedown',
+        (ev: any) => this.selectChoice(ev.target)
+      )
+
+      // idempotence mark
+      item.setAttribute('data-bound', 'true')
+    })
   }
+
+  draw() {
+    var rect = this.input.getBoundingClientRect()
+    this.box.style.top = rect.bottom + 'px'
+    this.box.style.left = rect.left + 'px'
+    this.box.style.width = rect.width + 'px'
+  }
+}
+
+@Component({
+  tag: 'autocomplete-light',
+  styleUrl: 'autocomplete-light.css'
+})
+export class AutocompleteLight {
+  @Prop() choiceSelector = '[data-value]'
+  @Prop() minimumCharacters = 1
+  @Prop() url: string
+  @Element() host: HTMLElement
+  input = new HTMLInputElement()
+  autocomplete: AutocompleteMachine
 
   render() {
     return <Host class="autocomplete-light">
-        <slot name="input" />
-        <span class="clear" hidden={!this.value.length} onClick={() => this.value = ''}>✖</span>
-      </Host>;
+      <slot name="input" />
+      <span
+        class="clear"
+        hidden={!this.input.value.length}
+        onClick={() => this.input.value = ''}
+      >✖</span>
+    </Host>;
+  }
+
+  componentDidRender() {
+    this.input = this.host.querySelector('[slot=input]')
+    if (!this.input) return
+    this.autocomplete = new AutocompleteMachine(this.host, this.input, this)
   }
 }
+

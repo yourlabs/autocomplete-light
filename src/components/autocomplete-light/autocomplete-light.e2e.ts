@@ -3,25 +3,19 @@ import { newE2EPage } from '@stencil/core/testing';
 describe('autocomplete-light', () => {
   it('renders', async () => {
     const page = await newE2EPage();
-
-    await page.setContent('<autocomplete-light></autocomplete-light>');
+    await page.setContent('<autocomplete-light><input slot="input" /></autocomplete-light>');
     const element = await page.find('autocomplete-light');
     expect(element).toHaveClass('hydrated');
   });
 
-  it('renders changes to the value', async () => {
+  it('input opens box', async () => {
     const page = await newE2EPage();
-
-    await page.setContent('<autocomplete-light></autocomplete-light>');
-    const component = await page.find('autocomplete-light');
-    expect(await component.getProperty('value')).toBe(undefined);
-
-    const input = await page.find('autocomplete-light >>> input');
-    expect(await input.getAttribute('value')).toBe(null);
-
-    component.setProperty('value', 'test');
-    await page.waitForChanges();
-    expect(await component.getProperty('value')).toBe('test');
-    expect(await input.getAttribute('value')).toBe('test');
+    await page.setContent('<autocomplete-light><input slot="input" /></autocomplete-light>');
+    const input = await page.find('input')
+    input.press('a')
+    //input.press('a')
+    //await page.waitForChanges();
+    //const box = await page.find('div.box')
+    //expect(box)
   });
 });
