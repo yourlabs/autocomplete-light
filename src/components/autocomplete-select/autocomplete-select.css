@@ -14,7 +14,3 @@ autocomplete-select select {
 autocomplete-select .deck {
   display: block;
 }
-
-autocomplete-option {
-  display: none;
-}

@@ -8,6 +8,11 @@
   border: 1px solid #d4d4d4;
   z-index: 1000;
   background-color: white;
+  border-radius: 2px;
+}
+
+.autocomplete-light-box [data-value] {
+  padding: .2rem
 }
 
 .autocomplete-light input {
@@ -17,7 +22,6 @@
 
 .autocomplete-light .clear {
   position: absolute;
-  display: block;
   top: 2px;  /* compensate for input border */
   right: 0;
   width: 16px;

@@ -7,10 +7,6 @@ import { Component, Element, Host, Prop, h } from '@stencil/core'
 export class AutocompleteSelect {
   @Element() el: HTMLElement
   @Prop() name: string
-  @Prop({
-    mutable: true,
-    reflect: true
-  }) values: Array<any>
   @Prop() maxChoices = 0
   @Prop() multiple = false
   @Prop() url: string
@@ -39,14 +35,14 @@ export class AutocompleteSelect {
   }
 
   get input() {
-    return this.el.querySelector('[slot=input]')
+    return this.el.querySelector('autocomplete-light')
   }
 
   onClearClick(ev: any) {
     this.choiceUnselect(ev.target.parentNode)
   }
 
-  choiceUnselect(choice: any) {
+  choiceUnselect(choice: any, noShowHide = false) {
     var value = choice.getAttribute('data-value')
 
     var option = this.select.querySelector('option[value="' + value + '"]')
@@ -58,11 +54,14 @@ export class AutocompleteSelect {
     if (decked) {
       decked.parentNode.removeChild(decked)
     }
+
+    if (!noShowHide)
+      this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
   }
 
   choiceSelect(choice: any) {
     if (this.maxChoices && this.selected.length >= this.maxChoices) {
-      this.choiceUnselect(this.selected[0])
+      this.choiceUnselect(this.selected[0], true)
     }
 
     // insert option in select
@@ -76,6 +75,8 @@ export class AutocompleteSelect {
     choice.classList.remove('hilight')
     this.addClear(choice)
     this.deck.appendChild(choice)
+
+    this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
   }
 
   addClear(choice: any) {
@@ -89,13 +90,14 @@ export class AutocompleteSelect {
   }
 
   componentDidRender() {
-    if (!this.bound) {
+    if (!this.input.getAttribute('data-bound')) {
       this.input.addEventListener(
         'autocompleteChoiceSelected',
         (ev: any) => this.choiceSelect(ev.detail.choice)
       )
-      this.bound = true
+      this.input.setAttribute('data-bound', 'true')
     }
+    this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
   }
 
   render() {

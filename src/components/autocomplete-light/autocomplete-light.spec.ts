@@ -5,16 +5,14 @@ describe('autocomplete-light', () => {
   it('renders', async () => {
     const {root} = await newSpecPage({
       components: [AutocompleteLight],
-      html: '<autocomplete-light></autocomplete-light>'
+      html: '<autocomplete-light><input slot=input /></autocomplete-light>'
     });
     expect(root).toEqualHtml(`
-      <autocomplete-light>
-        <mock:shadow-root>
-          <span>
-            <input type="text">
-            <span class="box"></span>
-          </span>
-        </mock:shadow-root>
+      <autocomplete-light class="autocomplete-light">
+        <input slot="input">
+        <span class="clear" hidden="">
+          ✖
+        </span>
       </autocomplete-light>
     `);
   });
@@ -25,13 +23,10 @@ describe('autocomplete-light', () => {
       html: `<autocomplete-light value="test"></autocomplete-light>`
     });
     expect(root).toEqualHtml(`
-      <autocomplete-light value="test">
-        <mock:shadow-root>
-          <span>
-            <input type="text" value="test" />
-            <span class="box"></span>
-          </span>
-        </mock:shadow-root>
+      <autocomplete-light class="autocomplete-light" value="test">
+        <span class="clear" hidden="">
+          ✖
+        </span>
       </autocomplete-light>
     `);
   });

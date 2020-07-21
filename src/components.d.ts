@@ -8,18 +8,15 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AutocompleteLight {
         "choiceSelector": string;
-        "classBox": string;
-        "classInput": string;
+        "hidden": boolean;
         "minimumCharacters": number;
         "url": string;
-        "value": string;
     }
     interface AutocompleteSelect {
         "maxChoices": number;
         "multiple": boolean;
         "name": string;
         "url": string;
-        "values": Array<any>;
     }
 }
 declare global {
@@ -43,18 +40,15 @@ declare global {
 declare namespace LocalJSX {
     interface AutocompleteLight {
         "choiceSelector"?: string;
-        "classBox"?: string;
-        "classInput"?: string;
+        "hidden"?: boolean;
         "minimumCharacters"?: number;
         "url"?: string;
-        "value"?: string;
     }
     interface AutocompleteSelect {
         "maxChoices"?: number;
         "multiple"?: boolean;
         "name"?: string;
         "url"?: string;
-        "values"?: Array<any>;
     }
     interface IntrinsicElements {
         "autocomplete-light": AutocompleteLight;
