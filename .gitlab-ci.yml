@@ -6,6 +6,7 @@ pages:
   - npm run-script build
   - sed -i 's@<head>@<head><base href="/autocomplete-light/">@' www/index.html
   - mv www public
+  - mv modal.js public
   artifacts:
     paths:
     - public
