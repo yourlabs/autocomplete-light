@@ -232,8 +232,9 @@ class AutocompleteMachine {
     if (!this.box) this.boxBuild()
     var rect = this.input.getBoundingClientRect()
     this.box.style.top = rect.bottom + 'px'
-    this.box.style.left = rect.left + 'px'
-    this.box.style.width = rect.width + 'px'
+    // keep some space for the border, avoid overflow on x
+    this.box.style.left = rect.left - 2 + 'px'
+    this.box.style.width = rect.width - 2  + 'px'
     this.box.removeAttribute('hidden')
   }
 }
