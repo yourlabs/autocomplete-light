@@ -20,31 +20,16 @@ class AutocompleteMachine {
     this.clear = clear
     this.options = options
 
-    if (!this.box) {
-      this.box = document.createElement('div')
-      this.box.classList.add('autocomplete-light-box')
+    if (!this.input.getAttribute('data-bound')) {
+      this.input.addEventListener(
+        'focus',
+        () => this.input.value.length >= this.options.minimumCharacters && this.onInput()
+      )
+      this.input.addEventListener('keyup', this.keyboard.bind(this))
+      this.input.addEventListener('input', this.onInput.bind(this))
+      this.input.setAttribute('data-bound', 'true')
       window.addEventListener('resize', this.draw.bind(this))
-      document.querySelector('body').appendChild(this.box)
     }
-
-    if (this.input.getAttribute('data-bound'))
-      return
-
-    this.input.addEventListener(
-      'blur',
-      () => this.box.setAttribute('hidden', 'true')
-    )
-    this.input.addEventListener(
-      'focus',
-      () => {
-        if (this.input.value.length >= this.options.minimumCharacters) {
-          this.onInput()
-        }
-      }
-    )
-    this.input.addEventListener('keyup', this.keyboard.bind(this))
-    this.input.addEventListener( 'input', this.onInput.bind(this))
-    this.input.setAttribute('data-bound', 'true')
   }
 
   onInput() {
@@ -227,7 +212,30 @@ class AutocompleteMachine {
     })
   }
 
+  boxBuild() {
+    this.box = document.createElement('div')
+    this.box.classList.add('autocomplete-light-box')
+
+    var container = this.host.parentElement
+    while (container && ['absolute', 'sticky', 'fixed', 'absolute'].indexOf(getComputedStyle(container).position) < 0) {
+      console.log(container, getComputedStyle(container).position)
+      container = container.parentElement
+      if (container['tagName'] == 'BODY') break
+    }
+    container.appendChild(this.box)
+
+    this.input.addEventListener(
+      'focusout',
+      () => this.box.setAttribute('hidden', 'true')
+    )
+    this.input.addEventListener(
+      'blur',
+      () => this.box.setAttribute('hidden', 'true')
+    )
+  }
+
   draw() {
+    if (!this.box) this.boxBuild()
     var rect = this.input.getBoundingClientRect()
     this.box.style.top = rect.bottom + 'px'
     this.box.style.left = rect.left + 'px'
