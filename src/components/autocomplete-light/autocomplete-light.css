@@ -9,6 +9,7 @@
   z-index: 1000;
   background-color: white;
   border-radius: 2px;
+  pointer-events: all !important;
 }
 
 .autocomplete-light-box [data-value] {

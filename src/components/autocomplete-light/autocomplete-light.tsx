@@ -215,14 +215,8 @@ class AutocompleteMachine {
   boxBuild() {
     this.box = document.createElement('div')
     this.box.classList.add('autocomplete-light-box')
+    document.querySelector('body').appendChild(this.box)
 
-    var container = this.host.parentElement
-    while (container && ['absolute', 'sticky', 'fixed', 'absolute'].indexOf(getComputedStyle(container).position) < 0) {
-      console.log(container, getComputedStyle(container).position)
-      container = container.parentElement
-      if (container['tagName'] == 'BODY') break
-    }
-    container.appendChild(this.box)
 
     this.input.addEventListener(
       'focusout',
