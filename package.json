@@ -1,6 +1,6 @@
 {
   "name": "autocomplete-light",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Stencil Component Starter",
   "repository": {
     "type": "git",
@@ -16,8 +16,8 @@
     "url": "https://yourlabs.io/oss/autocomplete-light/issues"
   },
   "homepage": "https://yourlabs.io/oss/autocomplete-light",
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",

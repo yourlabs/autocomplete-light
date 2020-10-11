@@ -49,9 +49,9 @@
   </autocomplete-select>
 
   <h2>autocomplete-select multiple with options</h2>
-  <form onsubmit="console.log(new URLSearchParams(Array.from(new FormData(this))).toString()); return false">
+  <p>Local: it gets its options from introspecting the select without a url</p>
   <autocomplete-select multiple>
-    <select slot="select" name="multiple" multiple=multiple>
+    <select slot="select" name="multiple">
       <option value="aaa" selected>aaa1</option>
       <option value="ccc">aaa2</option>
     </select>
@@ -63,7 +63,6 @@
     </autocomplete-light>
   </autocomplete-select>
   <input type="submit" />
-  </form>
 
 </body>
 </html>

@@ -86,7 +86,7 @@ export class AutocompleteSelect {
     var value = choice.getAttribute('data-value')
 
     // insert option in select if not present
-    if (!this.select.querySelectorAll('option[value=' + value + ']').length) {
+    if (!this.select.querySelectorAll('option[value="' + value + '"]').length) {
       var option = document.createElement('option')
       option.setAttribute('value', value)
       option.setAttribute('selected', 'selected')
