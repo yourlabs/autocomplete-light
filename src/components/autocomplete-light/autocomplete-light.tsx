@@ -121,9 +121,8 @@ class AutocompleteMachine {
         this.move(ev);
         break;
 
-      case 9: // tab
       case 13: // enter
-        if (!this.box.getAttribute('hidden')) return
+        if (this.box.getAttribute('hidden')) return
 
         var choice = this.box.querySelector('.hilight');
 
