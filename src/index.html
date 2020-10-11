@@ -71,5 +71,24 @@
     })
   </script>
 
+  <h2>works inside modal windows</h2>
+
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" as="style" type="text/css"><link rel="preload" href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" as="style" type="text/css"><script type="module" src="https://material-components.github.io/material-components-web-components/demos/dialog/index.js"></script><script nomodule src="https://material-components.github.io/material-components-web-components/demos/polyfills/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script><style>.unresolved main{opacity:0}</style><link href="https://material-components.github.io/material-components-web-components/demos/polyfills/@webcomponents/webcomponentsjs/shared/shared.css" rel="stylesheet"><link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"><link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+
+<mwc-dialog open id="dialog1" heading="Dialog header">
+  <autocomplete-select multiple>
+    <select slot="select" name="multiple-options">
+      <option value="aaa" selected>aaa1</option>
+      <option value="ccc">aaa2</option>
+    </select>
+    <div slot="deck">
+      <div data-value="bbb" selected>bbb3</div>
+    </div>
+    <autocomplete-light slot="input">
+      <input slot="input" type="text" />
+    </autocomplete-light>
+  </autocomplete-select>
+<mwc-button slot="primaryAction" dialogaction="ok">Action 2</mwc-button><mwc-button slot="secondaryAction" dialogaction="cancel">Action 1</mwc-button></mwc-dialog>
+
 </body>
 </html>
