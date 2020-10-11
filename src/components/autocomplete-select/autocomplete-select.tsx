@@ -96,7 +96,7 @@ export class AutocompleteSelect {
     }
 
     // insert choice on deck if not present, based on a choice node clone
-    if (!this.deck.querySelectorAll('[data-value=' + value + ']').length) {
+    if (!this.deck.querySelectorAll('[data-value="' + value + '"]').length) {
       choice = choice.cloneNode(9)
       choice.classList.remove('hilight')
       this.addClear(choice)
