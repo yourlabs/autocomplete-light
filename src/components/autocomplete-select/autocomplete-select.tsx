@@ -25,7 +25,7 @@ export class AutocompleteSelect {
       cmp.setAttribute('selected', 'selected')
       cmp.setAttribute('data-value', option.getAttribute('value'))
       cmp.innerHTML = option['innerHTML']
-      this.choiceSelect(cmp)
+      this.choiceSelect(cmp, false)
     })
 
     // ensure all deck values are in select
@@ -33,7 +33,7 @@ export class AutocompleteSelect {
       this.deck.querySelectorAll('[data-value]')
     ).map((choice) => {
         if (!this.select.querySelector('option[value="' + choice.getAttribute('data-value') + '"]')) {
-          this.choiceSelect(choice)
+          this.choiceSelect(choice, false)
         }
         this.addClear(choice)
     })
@@ -74,9 +74,11 @@ export class AutocompleteSelect {
 
     if (!noShowHide)
       this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
+
+    this.changeTrigger()
   }
 
-  choiceSelect(choice: any, option: any = false) {
+  choiceSelect(choice: any, trigger: boolean = true, option: any = false) {
     console.log('choiceSelect', choice)
 
     if (this.maxChoices && this.selected.length >= this.maxChoices) {
@@ -92,9 +94,9 @@ export class AutocompleteSelect {
       option.setAttribute('value', value)
       option.innerHTML = choice.innerHTML
       this.select.appendChild(option)
+      console.log('select new option', option)
     }
     option.setAttribute('selected', 'selected')
-    console.log('select new option', option)
 
     // insert choice on deck if not present, based on a choice node clone
     if (! this.deck.querySelector('[data-value="' + value + '"]')) {
@@ -106,6 +108,14 @@ export class AutocompleteSelect {
     }
 
     this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
+
+    trigger && this.changeTrigger()
+  }
+
+  changeTrigger() {
+    this.select.dispatchEvent(
+      new Event('change', {bubbles: true, cancelable: false})
+    )
   }
 
   addClear(choice: any) {

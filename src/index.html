@@ -50,8 +50,9 @@
 
   <h2>autocomplete-select multiple with options</h2>
   <p>Local: it gets its options from introspecting the select without a url</p>
+  <p>Change event on vanilla select also works</p>
   <autocomplete-select multiple>
-    <select slot="select" name="multiple">
+    <select slot="select" name="multiple-options">
       <option value="aaa" selected>aaa1</option>
       <option value="ccc">aaa2</option>
     </select>
@@ -63,6 +64,12 @@
     </autocomplete-light>
   </autocomplete-select>
   <input type="submit" />
+  <script>
+    var options = document.querySelector('[name=multiple-options]')
+    options.addEventListener('change', function(e) {
+      console.log('change multiple-options select')
+    })
+  </script>
 
 </body>
 </html>
