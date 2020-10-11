@@ -11,6 +11,28 @@ autocomplete-select select {
   white-space: nowrap !important;
 }
 
-autocomplete-select .deck {
+autocomplete-select [slot=deck] {
   display: block;
+}
+
+autocomplete-select [slot=deck] [data-value] {
+  margin: 4px;
+  border-radius: 16px;
+  font-size: .875rem;
+  background-color: #e0e0e0;
+  letter-spacing: .0178571429em;
+  color: rgba(0,0,0,.87);
+  cursor: pointer;
+  line-height: 1.25rem;
+  display: inline-flex;
+  position: relative;
+  box-sizing: border-box;
+  padding: 0 12px;
+  height: 32px;
+  align-items: center;
+}
+
+
+autocomplete-select [slot=deck] .clear {
+  padding-left: 5px;
 }
