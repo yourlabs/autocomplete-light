@@ -16,8 +16,8 @@
     "url": "https://yourlabs.io/oss/autocomplete-light/issues"
   },
   "homepage": "https://yourlabs.io/oss/autocomplete-light",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.js",
   "es2015": "dist/esm/index.mjs",
   "es2017": "dist/esm/index.mjs",
   "types": "dist/types/index.d.ts",
@@ -36,11 +36,12 @@
     "generate": "stencil generate"
   },
   "devDependencies": {
-    "@stencil/core": "^1.17.3",
+    "@stencil/core": "2.0.3",
     "@types/jest": "24.9.1",
     "@types/puppeteer": "2.0.1",
     "jest": "24.9.0",
     "jest-cli": "24.9.0",
     "puppeteer": "2.1.1"
-  }
+  },
+  "dependencies": {}
 }
