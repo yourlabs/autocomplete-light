@@ -76,7 +76,7 @@ export class AutocompleteSelect {
       this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
   }
 
-  choiceSelect(choice: any) {
+  choiceSelect(choice: any, option: any = false) {
     console.log('choiceSelect', choice)
 
     if (this.maxChoices && this.selected.length >= this.maxChoices) {
@@ -86,17 +86,18 @@ export class AutocompleteSelect {
     var value = choice.getAttribute('data-value')
 
     // insert option in select if not present
-    if (!this.select.querySelectorAll('option[value="' + value + '"]').length) {
-      var option = document.createElement('option')
+    option = this.select.querySelector('option[value="' + value + '"]')
+    if (!option) {
+      option = document.createElement('option')
       option.setAttribute('value', value)
-      option.setAttribute('selected', 'selected')
       option.innerHTML = choice.innerHTML
       this.select.appendChild(option)
-      console.log('select new option', option)
     }
+    option.setAttribute('selected', 'selected')
+    console.log('select new option', option)
 
     // insert choice on deck if not present, based on a choice node clone
-    if (!this.deck.querySelectorAll('[data-value="' + value + '"]').length) {
+    if (! this.deck.querySelector('[data-value="' + value + '"]')) {
       choice = choice.cloneNode(9)
       choice.classList.remove('hilight')
       this.addClear(choice)
