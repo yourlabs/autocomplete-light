@@ -7,17 +7,15 @@ class AutocompleteMachine {
   input: HTMLInputElement
   box: HTMLElement
   host: HTMLElement
-  clear: HTMLElement
   options = {
     url: null,
     minimumCharacters: 0,
     choiceSelector: '[data-value]'
   }
 
-  constructor(host, input, clear, options) {
+  constructor(host, input, options) {
     this.host = host
     this.input = input
-    this.clear = clear
     this.options = options
 
     if (!this.input.getAttribute('data-bound')) {
@@ -33,11 +31,6 @@ class AutocompleteMachine {
   }
 
   onInput() {
-    if (! this.input.value) {
-      this.clear.setAttribute('hidden', 'true')
-    } else {
-      this.clear.removeAttribute('hidden')
-    }
     // clear any unset xhr
     this.xhr && this.xhr.readyState === 0 && this.xhr.abort()
     // clear any planned xhr
@@ -254,36 +247,23 @@ export class AutocompleteLight {
   @Element() host: HTMLElement
   input: HTMLInputElement
   autocomplete: AutocompleteMachine
-  clear: HTMLElement
 
   render() {
     return <Host class="autocomplete-light">
       <slot name="input" />
-      <span
-        class="clear"
-        onClick={() => this.input.value = ''}
-      >✖</span>
     </Host>;
   }
 
   componentDidRender() {
     this.input = this.host.querySelector('[slot=input]')
-    this.clear = this.host.querySelector('.clear')
     if (this.hidden) {
       this.input.setAttribute('hidden', 'true')
-      this.clear.setAttribute('hidden', 'true')
     } else {
       this.input.removeAttribute('hidden')
-      if (this.input.value.length > 0) {
-        this.clear.removeAttribute('hidden')
-      } else {
-        this.clear.setAttribute('hidden', 'true')
-      }
     }
     this.autocomplete = new AutocompleteMachine(
       this.host,
       this.input,
-      this.clear,
       this
     )
   }
