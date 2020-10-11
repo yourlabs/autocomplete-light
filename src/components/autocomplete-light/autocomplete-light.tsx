@@ -86,6 +86,16 @@ class AutocompleteMachine {
       this.xhr.addEventListener('load', this.receive.bind(this))
       this.xhr.open('GET', this.options.url)
       this.xhr.send()
+    } else if (this.host.parentNode['tagName'] == 'AUTOCOMPLETE-SELECT') {
+      this.receive({
+        target: {
+          response: Array.from(
+              this.host.parentNode.querySelectorAll('option')
+          ).map(
+            (item) => `<div data-value="${item.getAttribute('value')}">${item.innerHTML}</div>`
+          ).join('\n'),
+        }
+      })
     } else {
       // test mode
       this.receive({

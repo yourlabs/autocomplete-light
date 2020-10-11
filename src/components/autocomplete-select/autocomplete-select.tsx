@@ -17,9 +17,26 @@ export class AutocompleteSelect {
       this.maxChoices = 1
     }
 
+    // ensure all selected options are in deck
+    Array.from(
+      this.select.querySelectorAll('option[selected]')
+    ).map((option) => {
+      var cmp = document.createElement('div')
+      cmp.setAttribute('selected', 'selected')
+      cmp.setAttribute('data-value', option.getAttribute('value'))
+      cmp.innerHTML = option['innerHTML']
+      this.choiceSelect(cmp)
+    })
+
+    // ensure all deck values are in select
     Array.from(
       this.deck.querySelectorAll('[data-value]')
-    ).map((item) => this.addClear(item))
+    ).map((choice) => {
+        if (!this.select.querySelector('option[value="' + choice.getAttribute('data-value') + '"]')) {
+          this.choiceSelect(choice)
+        }
+        this.addClear(choice)
+    })
   }
 
   get deck() {
@@ -47,7 +64,7 @@ export class AutocompleteSelect {
 
     var option = this.select.querySelector('option[value="' + value + '"]')
     if (option) {
-      option.parentNode.removeChild(option)
+      option.removeAttribute('selected')
     }
 
     var decked = this.deck.querySelector('[data-value="' + value + '"]')
@@ -60,21 +77,32 @@ export class AutocompleteSelect {
   }
 
   choiceSelect(choice: any) {
+    console.log('choiceSelect', choice)
+
     if (this.maxChoices && this.selected.length >= this.maxChoices) {
       this.choiceUnselect(this.selected[0], true)
     }
 
-    // insert option in select
-    var option = document.createElement('option')
-    option.setAttribute('value', choice.getAttribute('data-value'))
-    option.setAttribute('selected', 'selected')
-    this.select.appendChild(option)
+    var value = choice.getAttribute('data-value')
 
-    // insert choice on deck, based on a choice node clone
-    choice = choice.cloneNode(9)
-    choice.classList.remove('hilight')
-    this.addClear(choice)
-    this.deck.appendChild(choice)
+    // insert option in select if not present
+    if (!this.select.querySelectorAll('option[value=' + value + ']').length) {
+      var option = document.createElement('option')
+      option.setAttribute('value', value)
+      option.setAttribute('selected', 'selected')
+      option.innerHTML = choice.innerHTML
+      this.select.appendChild(option)
+      console.log('select new option', option)
+    }
+
+    // insert choice on deck if not present, based on a choice node clone
+    if (!this.deck.querySelectorAll('[data-value=' + value + ']').length) {
+      choice = choice.cloneNode(9)
+      choice.classList.remove('hilight')
+      this.addClear(choice)
+      this.deck.appendChild(choice)
+      console.log('deck new choice', choice)
+    }
 
     this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
   }

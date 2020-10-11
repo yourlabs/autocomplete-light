@@ -13,7 +13,6 @@
 | `multiple`   | `multiple`    |             | `boolean` | `false`     |
 | `name`       | `name`        |             | `string`  | `undefined` |
 | `url`        | `url`         |             | `string`  | `undefined` |
-| `values`     | --            |             | `any[]`   | `undefined` |
 
 
 ----------------------------------------------

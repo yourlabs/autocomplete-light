@@ -7,11 +7,12 @@
 
 ## Properties
 
-| Property            | Attribute            | Description | Type     | Default          |
-| ------------------- | -------------------- | ----------- | -------- | ---------------- |
-| `choiceSelector`    | `choice-selector`    |             | `string` | `'[data-value]'` |
-| `minimumCharacters` | `minimum-characters` |             | `number` | `1`              |
-| `url`               | `url`                |             | `string` | `undefined`      |
+| Property            | Attribute            | Description | Type      | Default          |
+| ------------------- | -------------------- | ----------- | --------- | ---------------- |
+| `choiceSelector`    | `choice-selector`    |             | `string`  | `'[data-value]'` |
+| `hidden`            | `hidden`             |             | `boolean` | `false`          |
+| `minimumCharacters` | `minimum-characters` |             | `number`  | `0`              |
+| `url`               | `url`                |             | `string`  | `undefined`      |
 
 
 ----------------------------------------------
