@@ -1,0 +1,17 @@
+{
+  "name": "autocomplete-light",
+  "version": "0.0.1",
+  "description": "Extremely lightweight autocompletion web component",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "test": "jest"
+  },
+  "author": "jpic",
+  "license": "MIT",
+  "devDependencies": {
+    "snowpack": "^2.17.1"
+  }
+}
