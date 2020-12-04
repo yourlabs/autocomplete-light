@@ -142,8 +142,8 @@ export class AutocompleteSelect {
   render() {
     return <Host class="autocomplete-select">
       <slot name="select" />
-      <slot name="deck" />
       <slot name="input" />
+      <slot name="deck" />
     </Host>;
   }
 }

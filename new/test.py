@@ -14,6 +14,7 @@ def retry(cb, *args, expected=None, **kwargs):
                 return result
             elif expected is None and result:
                 return result
+
         i -= 1
     return wrapper
 
@@ -54,7 +55,34 @@ class AutocompleteLight:
         return self.browser.find_by_css('body').click()
 
     def type(self, val):
-        return self.browser.find_by_css(f'#input-simple input')[0].type(val)
+        return self.browser.find_by_css(f'#{self.id} input')[0].type(val)
+
+
+class AutocompleteSelect(AutocompleteLight):
+    def alight(self):
+        return self.attr('input')
+
+    def input(self):
+        return self.attr('input.input')
+
+    def box(self):
+        return self.attr('input.box')
+
+    def selected(self):
+        return self.browser.evaluate_script(
+            f'document.getElementById("{self.id}").deck.querySelectorAll("[data-value]")'
+        )
+
+    def select(self):
+        return self.attr('select')
+
+    def value(self):
+        return self.select().get_property('value')
+
+    def choices(self):
+        return self.browser.evaluate_script(
+            f'document.getElementById("{self.id}").input.box.querySelectorAll("[data-value]")'
+        )
 
 
 def get_input(browser, id):
@@ -63,7 +91,7 @@ def get_input(browser, id):
     )
 
 
-def test_example_is_working(browser):
+def test_input_simple(browser):
     browser.visit('http://localhost:8000')
     al = AutocompleteLight(browser, 'input-simple')
 
@@ -119,6 +147,58 @@ def test_example_is_working(browser):
     assert al.hilight() == choices[2]
 
     # try enter to select
-    expected = choices[2].get_attribute('data-value')
+    expected = choices[2].text
     al.type(Keys.ENTER)
     assert al.input().get_attribute('value') == expected
+
+
+def test_select_simple(browser):
+    browser.visit('http://localhost:8000')
+    al = AutocompleteSelect(browser, 'select-simple')
+
+    def assert_selected(label, value):
+        # get selected choices from deck
+        selected = retry(al.selected)
+
+        # there should only be one selected choice
+        assert len(selected) == 1
+
+        # value of the select should be that of the selected choice
+        assert selected[0].get_attribute('data-value') == str(value)
+        assert al.value() == str(value)
+
+        # text of the selected choice in the deck should be right
+        assert selected[0].text.split('\n')[0] == label
+
+        # maxChoices reached: autocomplete should be hidden
+        assert al.alight().get_property('hidden')
+
+    assert_selected('aab', 1)
+
+    # let's click to remove the selected choice
+    al.selected()[0].find_element_by_tag_name('span').click()
+
+    # this should show the autocomplete input again
+    assert retry(lambda: not al.alight().get_property('hidden'))
+
+    # this should have removed the choice from the deck
+    assert retry(lambda: not al.selected())
+
+    # and emptied the select value
+    assert retry(lambda: not al.value())
+
+    # let's type something in the input then
+    al.type('a')
+
+    # this should create a suggestion box
+    box = retry(al.box)
+    assert box
+
+    # which should be displayed
+    assert retry(lambda: not box.get_property('hidden'))
+
+    # let's click a choice
+    al.choices()[2].click()
+
+    # should it all be like in the beginning but with this other value
+    assert_selected('abb', 2)

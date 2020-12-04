@@ -4,15 +4,6 @@ class AutocompleteLight extends HTMLElement {
   timeoutId = null
   input = null
   box = null
-  options = {
-    url: null,
-    minimumCharacters: 0,
-    choiceSelector: '[data-value]'
-  }
-
-  constructor() {
-    super()
-  }
 
   onInput() {
     // clear any unset xhr
@@ -43,29 +34,19 @@ class AutocompleteLight extends HTMLElement {
   }
 
   download() {
-    if (this.options.url) {
+    if (this.url) {
       this.xhr = new XMLHttpRequest()
       this.xhr.addEventListener('load', this.receive.bind(this))
-      this.xhr.open('GET', this.options.url)
+      this.xhr.open('GET', this.url + '?q=' + this.input.value)
       this.xhr.send()
-    } else if (this.parentNode['tagName'] == 'AUTOCOMPLETE-SELECT') {
+    } else {
+      // No URL ? Try to receive from option tags of parent node
       this.receive({
         target: {
           response: Array.from(
               this.parentNode.querySelectorAll('option')
           ).map(
             (item) => `<div data-value="${item.getAttribute('value')}">${item.innerHTML}</div>`
-          ).join('\n'),
-        }
-      })
-    } else {
-      // test mode
-      this.receive({
-        target: {
-          response: ['aaa', 'aab', 'abb', 'bbb'].filter(
-            (item) => item.startsWith(this.input.value)
-          ).map(
-              (item) => `<div data-value="${item}">${item}</div>`
           ).join('\n'),
         }
       })
@@ -108,7 +89,7 @@ class AutocompleteLight extends HTMLElement {
 
   move(ev) {
     // If the autocomplete should not be displayed then return.
-    if (this.input.value.length < this.options.minimumCharacters) return true;
+    if (this.input.value.length < this.minimumCharacters) return true;
 
     // Avoid moving the cursor in the input.
     ev.preventDefault()
@@ -155,17 +136,29 @@ class AutocompleteLight extends HTMLElement {
   }
 
   get choices() {
-    return Array.from(this.box.querySelectorAll(this.options.choiceSelector))
+    return Array.from(this.box.querySelectorAll(this.choiceSelector))
   }
 
   get selected() {
-    return this.box.querySelectorAll(this.options.choiceSelector + '.hilight')
+    return this.box.querySelectorAll(this.choiceSelector + '.hilight')
+  }
+
+  get url() {
+    return this.getAttribute('url')
+  }
+
+  get choiceSelector() {
+    return this.getAttribute('choice-selector') || '[data-value]'
+  }
+
+  get minimumCharacters() {
+    return this.getAttribute('minimum-characters') || 0
   }
 
   receive(ev) {
     this.draw()
     this.box.innerHTML = ev.target.response
-    this.box.querySelectorAll(this.options.choiceSelector).forEach((item) => {
+    this.box.querySelectorAll(this.choiceSelector).forEach((item) => {
       // item idempotence
       if (item.getAttribute('data-bound'))
         return
@@ -217,8 +210,6 @@ class AutocompleteLight extends HTMLElement {
 
   connectedCallback() {
     this.input = this.querySelector('[slot=input]')
-    console.log(this)
-    console.log(this.querySelector('[slot=input]'))
     if (this.hidden) {
       this.input.setAttribute('hidden', 'true')
     } else {
@@ -228,7 +219,7 @@ class AutocompleteLight extends HTMLElement {
     if (!this.input.getAttribute('data-bound')) {
       this.input.addEventListener(
         'focus',
-        () => this.input.value.length >= this.options.minimumCharacters && this.onInput()
+        () => this.input.value.length >= this.minimumCharacters && this.onInput()
       )
       this.input.addEventListener('keyup', this.keyboard.bind(this))
       this.input.addEventListener('input', this.onInput.bind(this))
@@ -238,7 +229,6 @@ class AutocompleteLight extends HTMLElement {
         () => this.box && this.box.setAttribute('hidden', 'true')
       )
     }
-    console.log('connected')
   }
 
   disconnectedCallback() {
@@ -250,18 +240,25 @@ class AutocompleteLight extends HTMLElement {
   }
 }
 
-class AutocompleteSelect {
+class AutocompleteSelect extends HTMLElement {
   maxChoices = 0
   multiple = false
-  url = null
   bound = false
-  el = null
   name = null
 
   connectedCallback() {
     if (!this.multiple) {
       this.maxChoices = 1
     }
+
+    if (!this.input.getAttribute('data-bound')) {
+      this.input.addEventListener(
+        'autocompleteChoiceSelected',
+        (ev) => this.choiceSelect(ev.detail.choice)
+      )
+      this.input.setAttribute('data-bound', 'true')
+    }
+    this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
 
     // ensure all selected options are in deck
     Array.from(
@@ -286,11 +283,11 @@ class AutocompleteSelect {
   }
 
   get deck() {
-    return this.el.querySelector('[slot=deck]')
+    return this.querySelector('[slot=deck]')
   }
 
   get select() {
-    return this.el.querySelector('[slot=select]')
+    return this.querySelector('[slot=select]')
   }
 
   get selected() {
@@ -298,7 +295,7 @@ class AutocompleteSelect {
   }
 
   get input() {
-    return this.el.querySelector('autocomplete-light')
+    return this.querySelector('autocomplete-light')
   }
 
   onClearClick(ev) {
@@ -318,6 +315,11 @@ class AutocompleteSelect {
       decked.parentNode.removeChild(decked)
     }
 
+    if (!this.selected.length) {
+      // clear select value
+      this.select.value = ''
+    }
+
     if (!noShowHide)
       this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
 
@@ -333,6 +335,11 @@ class AutocompleteSelect {
 
     var value = choice.getAttribute('data-value')
 
+    // update select value
+    if (!this.select.multiple) {
+      this.select.value = value
+    }
+
     // insert option in select if not present
     option = this.select.querySelector('option[value="' + value + '"]')
     if (!option) {
@@ -345,7 +352,7 @@ class AutocompleteSelect {
     option.setAttribute('selected', 'selected')
 
     // insert choice on deck if not present, based on a choice node clone
-    if (! this.deck.querySelector('[data-value="' + value + '"]')) {
+    if (!this.deck.querySelector('[data-value="' + value + '"]')) {
       choice = choice.cloneNode(9)
       choice.classList.remove('hilight')
       this.addClear(choice)
@@ -373,26 +380,6 @@ class AutocompleteSelect {
     clear.innerHTML = '✖'
     choice.appendChild(clear)
   }
-
-  componentDidRender() {
-    if (!this.input.getAttribute('data-bound')) {
-      this.input.addEventListener(
-        'autocompleteChoiceSelected',
-        (ev) => this.choiceSelect(ev.detail.choice)
-      )
-      this.input.setAttribute('data-bound', 'true')
-    }
-    this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
-  }
-
-  /*
-render() {
-    return <Host class="autocomplete-select">
-      <slot name="select" />
-      <slot name="input" />
-      <slot name="deck" />
-    </Host>;
-  } */
 }
 
 window.customElements.define('autocomplete-light', AutocompleteLight);

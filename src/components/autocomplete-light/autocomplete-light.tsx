@@ -26,7 +26,10 @@ class AutocompleteMachine {
       this.input.addEventListener('keyup', this.keyboard.bind(this))
       this.input.addEventListener('input', this.onInput.bind(this))
       this.input.setAttribute('data-bound', 'true')
-      window.addEventListener('resize', this.draw.bind(this))
+      window.addEventListener(
+        'resize',
+        () => this.box.setAttribute('hidden', 'true')
+      )
     }
   }
 

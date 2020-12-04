@@ -18,34 +18,31 @@
   a global navigation input like in the top bar of facebook for example,
   or to build other more complex components such as autocomplete-select.
   </p>
-  <p>
-  Note that this uses dummy test data because the autocomplete-light
-  does not declare an url attribute, which you should declare.
-  </p>
-  <autocomplete-light id="input-simple">
+  <autocomplete-light id="input-simple" url="/">
     <input slot="input" type="text" />
   </autocomplete-light>
   <script>
     document.querySelector('#input-simple').addEventListener(
       'autocompleteChoiceSelected',
       function(ev) {
-        this.querySelector('input').value = ev.detail.choice.getAttribute('data-value')
+        console.log('SELECTED VALUE: ', ev.detail.choice.getAttribute('data-value'))
+        this.querySelector('input').value = ev.detail.choice.innerHTML
       }
     )
   </script>
 
-  <!--
   <h2>autocomplete-select</h2>
-  <autocomplete-select>
+  <autocomplete-select id="select-simple">
     <select slot="select" name="simple"></select>
     <div slot="deck">
-      <div data-value="aaa" selected>aaa</div>
+      <div data-value="1" selected>aab</div>
     </div>
-    <autocomplete-light slot="input">
+    <autocomplete-light slot="input" url="/">
       <input slot="input" type="text" />
     </autocomplete-light>
   </autocomplete-select>
 
+  <!--
   <h2>autocomplete-select multiple</h2>
   <autocomplete-select multiple>
     <select slot="select" name="multiple" multiple></select>
