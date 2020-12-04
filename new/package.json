@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "snowpack dev",
+    "start": "python serve.py",
     "build": "snowpack build",
-    "test": "jest"
+    "test": "pytest -s test.py"
   },
   "author": "jpic",
   "license": "MIT",

@@ -6,8 +6,22 @@
   <title>Autocomplete-Light: Extremely Lightweight Autocomplete Web Component</title>
 </head>
 <body>
+
   <h2>autocomplete-light</h2>
-  <p>Check teh HTML source for usage</p>
+  <p>
+  A simple input which emits an event when the user selects an item
+  and nothing more, check teh HTML source for usage.
+  </p>
+  <p>
+  This is the core autocompletion component, it's all about displaying a
+  box with HTML fetched from the server, this is useful as-is to make
+  a global navigation input like in the top bar of facebook for example,
+  or to build other more complex components such as autocomplete-select.
+  </p>
+  <p>
+  Note that this uses dummy test data because the autocomplete-light
+  does not declare an url attribute, which you should declare.
+  </p>
   <autocomplete-light id="input-simple">
     <input slot="input" type="text" />
   </autocomplete-light>

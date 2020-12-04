@@ -64,7 +64,7 @@ def get_input(browser, id):
 
 
 def test_example_is_working(browser):
-    browser.visit('http://localhost:8080')
+    browser.visit('http://localhost:8000')
     al = AutocompleteLight(browser, 'input-simple')
 
     # wait until web component has initialized
