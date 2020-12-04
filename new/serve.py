@@ -10,7 +10,7 @@ choices = ['aaa', 'aab', 'abb', 'bbb']
 def application(environ, start_response):
     setup_testing_defaults(environ)
     ctype = 'text/html'
-    if environ['QUERY_STRING']:
+    if 'q=' in environ['QUERY_STRING']:
         q = environ['QUERY_STRING'].replace('q=', '')
         html = '\n'.join([
             f'<div data-value="{i}">{choice}</div>'

@@ -73,6 +73,9 @@ class AutocompleteSelect(AutocompleteLight):
             f'document.getElementById("{self.id}").deck.querySelectorAll("[data-value]")'
         )
 
+    def selectedOptions(self):
+        return self.attr('select.selectedOptions')
+
     def select(self):
         return self.attr('select')
 
@@ -83,6 +86,9 @@ class AutocompleteSelect(AutocompleteLight):
         return self.browser.evaluate_script(
             f'document.getElementById("{self.id}").input.box.querySelectorAll("[data-value]")'
         )
+
+    def unselect(self, index):
+        self.selected()[index].find_element_by_tag_name('span').click()
 
 
 def get_input(browser, id):
@@ -176,7 +182,7 @@ def test_select_simple(browser):
     assert_selected('aab', 1)
 
     # let's click to remove the selected choice
-    al.selected()[0].find_element_by_tag_name('span').click()
+    al.unselect(0)
 
     # this should show the autocomplete input again
     assert retry(lambda: not al.alight().get_property('hidden'))
@@ -202,3 +208,49 @@ def test_select_simple(browser):
 
     # should it all be like in the beginning but with this other value
     assert_selected('abb', 2)
+
+
+def test_select_multiple(browser):
+    browser.visit('http://localhost:8000')
+    al = AutocompleteSelect(browser, 'select-multiple')
+
+    def assert_selected(*label_values):
+        # get selected choices from deck
+        selected = retry(al.selected)
+
+        # number of selected choices should match
+        assert len(selected) == len(label_values)
+
+        # number of selectedOptions should match
+        assert len(al.selectedOptions()) == len(label_values)
+
+        # value of the select should be that of the selected choice
+        for label_value, choice in zip(label_values, selected):
+            label, value = label_value
+            assert choice.get_attribute('data-value') == str(value)
+            assert choice.text.split('\n')[0] == label
+
+        # maxChoices of 0: autocomplete should not hide
+        assert not al.alight().get_property('hidden')
+
+    assert_selected(('aaa', 0), ('bbb', 3))
+
+    # deselect the first option
+    al.unselect(0)
+    assert_selected(('bbb', 3))
+
+    # type something to select the second option
+    al.type('a')
+
+    # this should create a suggestion box
+    box = retry(al.box)
+    assert box
+
+    # which should be displayed
+    assert retry(lambda: not box.get_property('hidden'))
+
+    # let's click a choice
+    al.choices()[2].click()
+
+    # should it all be like in the beginning but with this other value
+    assert_selected(('bbb', 3), ('abb', 2))

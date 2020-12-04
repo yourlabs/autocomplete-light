@@ -45,6 +45,8 @@ class AutocompleteLight extends HTMLElement {
         target: {
           response: Array.from(
               this.parentNode.querySelectorAll('option')
+          ).filter(
+            (item) => item.innerText.startsWith(this.input.value)
           ).map(
             (item) => `<div data-value="${item.getAttribute('value')}">${item.innerHTML}</div>`
           ).join('\n'),
@@ -242,12 +244,11 @@ class AutocompleteLight extends HTMLElement {
 
 class AutocompleteSelect extends HTMLElement {
   maxChoices = 0
-  multiple = false
   bound = false
   name = null
 
   connectedCallback() {
-    if (!this.multiple) {
+    if (!this.select.multiple) {
       this.maxChoices = 1
     }
 
