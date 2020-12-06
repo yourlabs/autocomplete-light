@@ -89,14 +89,18 @@ class AutocompleteLight extends HTMLElement {
 
   keyboard(ev) {
     switch(ev.keyCode) {
+      // with Webkit, both keyCode and charCode are set to 38/40 for &/(.
+      // charCode is 0 for arrow keys.
+      // Ref: http://stackoverflow.com/a/12046935/15690
       case 40: // down arrow
       case 38: // up arrow
-      case 16: // shift
-      case 17: // ctrl
-      case 18: // alt
-        this.move(ev);
+        // Avoid moving the cursor in the input.
+        ev.preventDefault()
+        ev.stopPropagation()
+        this.move(ev.keyCode == 38 ? 'up' : 'down');
         break;
 
+      case 9:  // tab
       case 13: // enter
         if (this.box.getAttribute('hidden')) return
 
@@ -120,25 +124,12 @@ class AutocompleteLight extends HTMLElement {
     }
   }
 
-  move(ev) {
+  move(way) {
     // If the autocomplete should not be displayed then return.
     if (this.input.value.length < this.minimumCharacters) return true;
 
-    // Avoid moving the cursor in the input.
-    ev.preventDefault()
-    ev.stopPropagation()
-
     // The current choice if any.
     var current = this.box.querySelector('.hilight');
-
-    // If not KEY_UP or KEY_DOWN, then return.
-    // NOTE: with Webkit, both keyCode and charCode are set to 38/40 for &/(.
-    //       charCode is 0 for arrow keys.
-    //       Ref: http://stackoverflow.com/a/12046935/15690
-    var way;
-    if (ev.keyCode === 38 && !ev.charCode) way = 'up';
-    else if (ev.keyCode === 40 && !ev.charCode) way = 'down';
-    else return;
 
     // The first and last choices. If the user presses down on the last
     // choice, then the first one will be hilighted.
