@@ -1,46 +1,13 @@
 {
   "name": "autocomplete-light",
-  "version": "0.0.4",
-  "description": "Stencil Component Starter",
-  "repository": {
-    "type": "git",
-    "url": "git+https://yourlabs.io/oss/autocomplete-light.git"
-  },
-  "keywords": [
-    "autocomplete",
-    "select"
-  ],
-  "author": "∞ <jpic@yourlabs.org>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://yourlabs.io/oss/autocomplete-light/issues"
-  },
-  "homepage": "https://yourlabs.io/oss/autocomplete-light",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
-  "es2015": "dist/esm/index.mjs",
-  "es2017": "dist/esm/index.mjs",
-  "types": "dist/types/index.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/autocomplete-light/autocomplete-light.js",
-  "files": [
-    "dist/"
-  ],
+  "version": "0.0.1",
+  "description": "Extremely lightweight autocompletion web component",
+  "main": "autocomplete-light.js",
+  "type": "module",
   "scripts": {
-    "build": "stencil build --docs",
-    "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
-    "generate": "stencil generate"
+    "start": "python serve.py",
+    "test": "pytest -s test.py"
   },
-  "devDependencies": {
-    "@stencil/core": "2.0.3",
-    "@types/jest": "24.9.1",
-    "@types/puppeteer": "2.0.1",
-    "jest": "24.9.0",
-    "jest-cli": "24.9.0",
-    "puppeteer": "2.1.1"
-  },
-  "dependencies": {}
+  "author": "jpic",
+  "license": "MIT"
 }
