@@ -328,8 +328,6 @@ class AutocompleteSelect extends HTMLElement {
   }
 
   choiceSelect(choice, trigger=true, option=false) {
-    console.log('choiceSelect', choice)
-
     if (this.maxChoices && this.selected.length >= this.maxChoices) {
       this.choiceUnselect(this.selected[0], true)
     }
@@ -348,7 +346,6 @@ class AutocompleteSelect extends HTMLElement {
       option.setAttribute('value', value)
       option.innerHTML = choice.innerHTML
       this.select.appendChild(option)
-      console.log('select new option', option)
     }
     option.setAttribute('selected', 'selected')
 
@@ -358,7 +355,6 @@ class AutocompleteSelect extends HTMLElement {
       choice.classList.remove('hilight')
       this.addClear(choice)
       this.deck.appendChild(choice)
-      console.log('deck new choice', choice)
     }
 
     this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
