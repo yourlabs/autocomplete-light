@@ -225,7 +225,7 @@ class AutocompleteLight extends HTMLElement {
   draw() {
     if (!this.box) this.boxBuild()
     var rect = this.input.getBoundingClientRect()
-    this.box.style.top = rect.bottom + 'px'
+    this.box.style.top = rect.bottom + window.scrollY + 'px'
     this.box.style.left = rect.left + 'px'
     // keep some space for the border, avoid overflow on x
     this.box.style.width = rect.width - 2 + 'px'
