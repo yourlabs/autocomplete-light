@@ -156,7 +156,7 @@ class AutocompleteLight extends HTMLElement {
       target = way === 'up' ? last : first;
     }
 
-    this.hilight(target)
+    target !== undefined && this.hilight(target)
   }
 
   get choices() {
