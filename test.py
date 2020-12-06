@@ -155,7 +155,7 @@ def test_input_simple(browser):
     # try enter to select
     expected = choices[2].text
     al.type(Keys.ENTER)
-    assert al.input().get_attribute('value') == expected
+    assert retry(lambda: al.input().get_attribute('value')) == expected
 
 
 def test_select_simple(browser):
