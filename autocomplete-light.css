@@ -22,10 +22,6 @@
   white-space: nowrap;
 }
 
-.autocomplete-light-box [data-value]:hover {
-  background-color: #EEE;
-}
-
 .autocomplete-light input {
   padding-right: 16px;
   box-sizing: border-box;
