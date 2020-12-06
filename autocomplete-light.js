@@ -5,6 +5,37 @@ class AutocompleteLight extends HTMLElement {
   input = null
   box = null
 
+  connectedCallback() {
+    this.input = this.querySelector('[slot=input]')
+    if (this.hidden) {
+      this.input.setAttribute('hidden', 'true')
+    } else {
+      this.input.removeAttribute('hidden')
+    }
+
+    if (!this.input.getAttribute('data-bound')) {
+      this.input.addEventListener(
+        'focus',
+        () => this.input.value.length >= this.minimumCharacters && this.onInput()
+      )
+      this.input.addEventListener('keydown', this.keyboard.bind(this))
+      this.input.addEventListener('input', this.onInput.bind(this))
+      this.input.setAttribute('data-bound', 'true')
+      window.addEventListener(
+        'resize',
+        () => this.box && this.box.setAttribute('hidden', 'true')
+      )
+    }
+  }
+
+  disconnectedCallback() {
+    console.log('disconnected')
+  }
+
+  attributeChangedCallback(attrName, oldVal, newVal) {
+    console.log('changed')
+  }
+
   onInput() {
     // clear any unset xhr
     this.xhr && this.xhr.readyState === 0 && this.xhr.abort()
@@ -208,37 +239,6 @@ class AutocompleteLight extends HTMLElement {
     // keep some space for the border, avoid overflow on x
     this.box.style.width = rect.width - 2 + 'px'
     this.box.removeAttribute('hidden')
-  }
-
-  connectedCallback() {
-    this.input = this.querySelector('[slot=input]')
-    if (this.hidden) {
-      this.input.setAttribute('hidden', 'true')
-    } else {
-      this.input.removeAttribute('hidden')
-    }
-
-    if (!this.input.getAttribute('data-bound')) {
-      this.input.addEventListener(
-        'focus',
-        () => this.input.value.length >= this.minimumCharacters && this.onInput()
-      )
-      this.input.addEventListener('keyup', this.keyboard.bind(this))
-      this.input.addEventListener('input', this.onInput.bind(this))
-      this.input.setAttribute('data-bound', 'true')
-      window.addEventListener(
-        'resize',
-        () => this.box && this.box.setAttribute('hidden', 'true')
-      )
-    }
-  }
-
-  disconnectedCallback() {
-    console.log('disconnected')
-  }
-
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    console.log('changed')
   }
 }
 
