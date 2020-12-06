@@ -4,6 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Autocomplete-Light: Extremely Lightweight Autocomplete Web Component</title>
+  <style>
+  body {
+    margin: 0 auto;
+    max-width: 50em;
+    font-family: "Helvetica", "Arial", sans-serif;
+    line-height: 1.5;
+    padding: 4em 1em;
+    color: #555;
+  }
+
+  h2 {
+    margin-top: 1em;
+    padding-top: 1em;
+    color: #333;
+  }
+  </style>
 </head>
 <body>
 <form>
@@ -87,25 +103,26 @@
   <input type="submit" />
 </form>
 
-  <link rel="stylesheet" type="text/css" href="./autocomplete-light.css" />
-  <script src="./autocomplete-light.js"></script>
+<h2>works inside small modals</h2>
+<p>WARNING: <a href="https://bugs.webkit.org/show_bug.cgi?id=215622">crashes safari</a></p>
+<span onclick="document.querySelector('mwc-dialog').open = true">Click here to open modal</span>
 
+<script type="module" src="https://cdn.skypack.dev/@material/mwc-dialog"></script>
+<mwc-dialog heading="Dialog header">
+  <autocomplete-select multiple>
+    <select slot="select" name="multiple-options">
+      <option value="aaa">aaa1</option>
+      <option value="ccc">aaa2</option>
+    </select>
+    <div slot="deck">
+    </div>
+    <autocomplete-light slot="input">
+      <input slot="input" type="text" />
+    </autocomplete-light>
+  </autocomplete-select>
+</mwc-dialog>
 
-  <style>
-  body {
-    margin: 0 auto;
-    max-width: 50em;
-    font-family: "Helvetica", "Arial", sans-serif;
-    line-height: 1.5;
-    padding: 4em 1em;
-    color: #555;
-  }
-
-  h2 {
-    margin-top: 1em;
-    padding-top: 1em;
-    color: #333;
-  }
-  </style>
+<link rel="stylesheet" type="text/css" href="./autocomplete-light.css" />
+<script src="./autocomplete-light.js"></script>
 </body>
 </html>
