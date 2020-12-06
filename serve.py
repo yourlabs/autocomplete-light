@@ -17,6 +17,8 @@ def application(environ, start_response):
             for i, choice in enumerate(choices)
             if choice.startswith(q)
         ])
+        if not html:
+            html = '<div>No result found</div>'
     else:
         if len(environ['PATH_INFO']) > 1:
             path = environ['PATH_INFO'][1:]
