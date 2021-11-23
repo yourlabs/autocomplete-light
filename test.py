@@ -90,6 +90,44 @@ class AutocompleteSelect(AutocompleteLight):
     def unselect(self, index):
         self.selected()[index].find_element_by_tag_name('span').click()
 
+    def assert_selected(self, label, value):
+        # get selected choices from deck
+        selected = retry(self.selected)
+
+        # there should only be one selected choice
+        assert len(selected) == 1
+
+        # value of the select should be that of the selected choice
+        assert selected[0].get_attribute('data-value') == str(value)
+        assert self.value() == str(value)
+
+        # text of the selected choice in the deck should be right
+        assert selected[0].text.split('\n')[0] == label
+
+        # maxChoices reached: autocomplete should be hidden
+        assert self.input().get_property('hidden')
+
+
+class AutocompleteSelectMultiple(AutocompleteSelect):
+    def assert_selected(self, *label_values):
+        # get selected choices from deck
+        selected = retry(self.selected)
+
+        # number of selected choices should match
+        assert len(selected) == len(label_values)
+
+        # number of selectedOptions should match
+        assert len(self.selectedOptions()) == len(label_values)
+
+        # value of the select should be that of the selected choice
+        for label_value, choice in zip(label_values, selected):
+            label, value = label_value
+            assert choice.get_attribute('data-value') == str(value)
+            assert choice.text.split('\n')[0] == label
+
+        # maxChoices of 0: autocomplete should not hide
+        assert not self.alight().get_property('hidden')
+
 
 def get_input(browser, id):
     return retry(browser.evaluate_script)(
@@ -162,24 +200,7 @@ def test_select_simple(browser):
     browser.visit('http://localhost:8000')
     al = AutocompleteSelect(browser, 'select-simple')
 
-    def assert_selected(label, value):
-        # get selected choices from deck
-        selected = retry(al.selected)
-
-        # there should only be one selected choice
-        assert len(selected) == 1
-
-        # value of the select should be that of the selected choice
-        assert selected[0].get_attribute('data-value') == str(value)
-        assert al.value() == str(value)
-
-        # text of the selected choice in the deck should be right
-        assert selected[0].text.split('\n')[0] == label
-
-        # maxChoices reached: autocomplete should be hidden
-        assert al.input().get_property('hidden')
-
-    assert_selected('aab', 1)
+    al.assert_selected('aab', 1)
 
     # let's click to remove the selected choice
     al.unselect(0)
@@ -207,37 +228,18 @@ def test_select_simple(browser):
     al.choices()[2].click()
 
     # should it all be like in the beginning but with this other value
-    assert_selected('abb', 2)
+    al.assert_selected('abb', 2)
 
 
 def test_select_multiple(browser):
     browser.visit('http://localhost:8000')
-    al = AutocompleteSelect(browser, 'select-multiple')
+    al = AutocompleteSelectMultiple(browser, 'select-multiple')
 
-    def assert_selected(*label_values):
-        # get selected choices from deck
-        selected = retry(al.selected)
-
-        # number of selected choices should match
-        assert len(selected) == len(label_values)
-
-        # number of selectedOptions should match
-        assert len(al.selectedOptions()) == len(label_values)
-
-        # value of the select should be that of the selected choice
-        for label_value, choice in zip(label_values, selected):
-            label, value = label_value
-            assert choice.get_attribute('data-value') == str(value)
-            assert choice.text.split('\n')[0] == label
-
-        # maxChoices of 0: autocomplete should not hide
-        assert not al.alight().get_property('hidden')
-
-    assert_selected(('aaa', 0), ('bbb', 3))
+    al.assert_selected(('aaa', 0), ('bbb', 3))
 
     # deselect the first option
     al.unselect(0)
-    assert_selected(('bbb', 3))
+    al.assert_selected(('bbb', 3))
 
     # type something to select the second option
     al.type('a')
@@ -253,4 +255,4 @@ def test_select_multiple(browser):
     al.choices()[2].click()
 
     # should it all be like in the beginning but with this other value
-    assert_selected(('bbb', 3), ('abb', 2))
+    al.assert_selected(('bbb', 3), ('abb', 2))
