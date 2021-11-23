@@ -1,6 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 
-from alight import *  # noqa
+from autocomplete_light import *  # noqa
 
 
 def test_input_simple(browser):

@@ -1,3 +1,8 @@
+"""
+Test script helpers in Python.
+
+Not necessary to run autocomplete-light.js
+"""
 
 
 def retry(cb, *args, expected=None, **kwargs):
