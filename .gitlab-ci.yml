@@ -20,3 +20,8 @@ pages:
   only:
     refs:
       - master
+
+pypi:
+  stage: deploy
+  script: pypi-release
+  only: [tags]
