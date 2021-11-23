@@ -177,7 +177,7 @@ def test_select_simple(browser):
         assert selected[0].text.split('\n')[0] == label
 
         # maxChoices reached: autocomplete should be hidden
-        assert al.alight().get_property('hidden')
+        assert al.input().get_property('hidden')
 
     assert_selected('aab', 1)
 

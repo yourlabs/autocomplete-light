@@ -1,12 +1,18 @@
+py-test:
+  stage: test
+  image: yourlabs/python-arch
+  script:
+  - pacman -Syu --noconfirm python-selenium geckodriver firefox
+  - pip install pytest-splinter
+  - python serve.py &
+  - py.test -sv --splinter-headless test.py
+
 pages:
-  stage: build
+  stage: deploy
   image: node:alpine
   script:
-  - npm install
-  - npm run-script build
-  - sed -i 's@<head>@<head><base href="/autocomplete-light/">@' www/index.html
-  - mv www public
-  - mv modal.js public
+  - sed -i 's@<head>@<head><base href="/autocomplete-light/">@' index.html
+  - mv index.html public
   artifacts:
     paths:
     - public
