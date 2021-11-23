@@ -11,11 +11,8 @@ pages:
   stage: deploy
   image: node:alpine
   script:
-  - npm install
-  - npm run-script build
-  - sed -i 's@<head>@<head><base href="/autocomplete-light/">@' www/index.html
-  - mv www public
-  - mv modal.js public
+  - sed -i 's@<head>@<head><base href="/autocomplete-light/">@' index.html
+  - mv index.html public
   artifacts:
     paths:
     - public
