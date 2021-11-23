@@ -9,18 +9,18 @@ class AutocompleteLight extends HTMLElement {
     this.input = this.querySelector('[slot=input]')
     if (!this.input) return setTimeout(this.connectedCallback.bind(this), 100)
 
-    if (!this.input.getAttribute('data-bound')) {
+    if (!this.getAttribute('data-bound')) {
       this.input.addEventListener(
         'focus',
         () => this.input.value.length >= this.minimumCharacters && this.onInput()
       )
       this.input.addEventListener('keydown', this.keyboard.bind(this))
       this.input.addEventListener('input', this.onInput.bind(this))
-      this.input.setAttribute('data-bound', 'true')
       window.addEventListener(
         'resize',
         () => this.box && this.box.setAttribute('hidden', 'true')
       )
+      this.setAttribute('data-bound', 'true')
     }
   }
 
@@ -254,12 +254,11 @@ class AutocompleteSelect extends HTMLElement {
       this.maxChoices = 1
     }
 
-    if (!this.input.getAttribute('data-bound')) {
+    if (!this.getAttribute('data-bound')) {
       this.input.addEventListener(
         'autocompleteChoiceSelected',
         (ev) => this.choiceSelect(ev.detail.choice)
       )
-      this.input.setAttribute('data-bound', 'true')
     }
     this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
 
@@ -287,6 +286,8 @@ class AutocompleteSelect extends HTMLElement {
         }
         this.addClear(choice)
     })
+
+    this.setAttribute('data-bound', 'true')
   }
 
   get deck() {
