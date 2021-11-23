@@ -7,11 +7,7 @@ class AutocompleteLight extends HTMLElement {
 
   connectedCallback() {
     this.input = this.querySelector('[slot=input]')
-    if (this.hidden) {
-      this.input.setAttribute('hidden', 'true')
-    } else {
-      this.input.removeAttribute('hidden')
-    }
+    if (!this.input) return setTimeout(this.connectedCallback.bind(this), 100)
 
     if (!this.input.getAttribute('data-bound')) {
       this.input.addEventListener(
@@ -25,6 +21,18 @@ class AutocompleteLight extends HTMLElement {
         'resize',
         () => this.box && this.box.setAttribute('hidden', 'true')
       )
+    }
+  }
+
+  get hidden() {
+    return this.input.getAttribute('hidden')
+  }
+
+  set hidden(value) {
+    if (value) {
+      this.input.setAttribute('hidden', 'true')
+    } else {
+      this.input.removeAttribute('hidden')
     }
   }
 
@@ -85,7 +93,6 @@ class AutocompleteLight extends HTMLElement {
       })
     }
   }
-
 
   keyboard(ev) {
     switch(ev.keyCode) {
@@ -239,6 +246,10 @@ class AutocompleteSelect extends HTMLElement {
   name = null
 
   connectedCallback() {
+    if (!this.select || !this.input.input) {
+      return setTimeout(this.connectedCallback.bind(this), 100)
+    }
+
     if (!this.select.multiple) {
       this.maxChoices = 1
     }
