@@ -12,7 +12,11 @@ pages:
   image: node:alpine
   script:
   - sed -i 's@<head>@<head><base href="/autocomplete-light/">@' index.html
-  - mv index.html public
+  - mkdir public
+  - mv index.html autocomplete-light.js autocomplete-light.css public/
   artifacts:
     paths:
     - public
+  only:
+    refs:
+      - master
