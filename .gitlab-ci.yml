@@ -22,6 +22,7 @@ pages:
       - master
 
 pypi:
+  image: yourlabs/python
   stage: deploy
   script: pypi-release
   only: [tags]
