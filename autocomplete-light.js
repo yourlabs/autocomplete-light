@@ -267,6 +267,10 @@ class AutocompleteSelect extends HTMLElement {
     Array.from(
       this.select.querySelectorAll('option[selected]')
     ).map((option) => {
+      var exists = this.deck.querySelectorAll(
+        '[data-value="' + option.getAttribute('value') + '"]'
+      )
+      if (exists) return
       var cmp = document.createElement('div')
       cmp.setAttribute('selected', 'selected')
       cmp.setAttribute('data-value', option.getAttribute('value'))
