@@ -9,19 +9,17 @@ class AutocompleteLight extends HTMLElement {
     this.input = this.querySelector('[slot=input]')
     if (!this.input) return setTimeout(this.connectedCallback.bind(this), 100)
 
-    if (!this.getAttribute('data-bound')) {
-      this.input.addEventListener(
-        'focus',
-        () => this.input.value.length >= this.minimumCharacters && this.onInput()
-      )
-      this.input.addEventListener('keydown', this.keyboard.bind(this))
-      this.input.addEventListener('input', this.onInput.bind(this))
-      window.addEventListener(
-        'resize',
-        () => this.box && this.box.setAttribute('hidden', 'true')
-      )
-      this.setAttribute('data-bound', 'true')
-    }
+    this.input.addEventListener(
+      'focus',
+      () => this.input.value.length >= this.minimumCharacters && this.onInput()
+    )
+    this.input.addEventListener('keydown', this.keyboard.bind(this))
+    this.input.addEventListener('input', this.onInput.bind(this))
+    window.addEventListener(
+      'resize',
+      () => this.box && this.box.setAttribute('hidden', 'true')
+    )
+    this.setAttribute('data-bound', 'true')
   }
 
   get hidden() {
@@ -254,12 +252,10 @@ class AutocompleteSelect extends HTMLElement {
       this.maxChoices = 1
     }
 
-    if (!this.getAttribute('data-bound')) {
-      this.input.addEventListener(
-        'autocompleteChoiceSelected',
-        (ev) => this.choiceSelect(ev.detail.choice)
-      )
-    }
+    this.input.addEventListener(
+      'autocompleteChoiceSelected',
+      (ev) => this.choiceSelect(ev.detail.choice)
+    )
     this.input.hidden = this.maxChoices && this.selected.length >= this.maxChoices
 
     // ensure all selected options are in deck
