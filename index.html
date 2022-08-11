@@ -58,9 +58,9 @@
     <div slot="deck">
       <div data-value="1" selected>aab</div>
     </div>
-    <autocomplete-light slot="input" url="/">
+    <autocomplete-select-input slot="input" url="/">
       <input slot="input" type="text" />
-    </autocomplete-light>
+    </autocomplete-select-input>
   </autocomplete-select>
 
   <h2>autocomplete-select multiple</h2>
@@ -71,25 +71,25 @@
       <div data-value="0" selected>aaa</div>
       <div data-value="3" selected>bbb</div>
     </div>
-    <autocomplete-light slot="input" url="/">
+    <autocomplete-select-input slot="input" url="/">
       <input slot="input" type="text" />
-    </autocomplete-light>
+    </autocomplete-select-input>
   </autocomplete-select>
 
   <h2>autocomplete-select from options</h2>
   <p>Local: it gets its options from introspecting the select tag without a url.</p>
   <p>Change event on vanilla select also works</p>
-  <autocomplete-select multiple>
+  <autocomplete-select multiple id="select-multiple-local">
     <select slot="select" name="multiple-options" multiple>
       <option value="0" selected>aaa</option>
       <option value="1">aab</option>
       <option value="2">abb</option>
-      <option value="3">bbb</option>
+      <option value="3" selected>bbb</option>
     </select>
     <div slot="deck"></div>
-    <autocomplete-light slot="input">
+    <autocomplete-select-input slot="input">
       <input slot="input" type="text" />
-    </autocomplete-light>
+    </autocomplete-select-input>
   </autocomplete-select>
   <script>
     var options = document.querySelector('[name=multiple-options]')

@@ -1,3 +1,5 @@
+import pytest
+
 from selenium.webdriver.common.keys import Keys
 
 from autocomplete_light import *  # noqa
@@ -99,11 +101,22 @@ def test_select_simple(browser):
     al.assert_selected('abb', 2)
 
 
-def test_select_multiple(browser):
+@pytest.mark.parametrize('name', [
+    'select-multiple',
+    'select-multiple-local',
+])
+def test_select_multiple(browser, name):
     browser.visit('http://localhost:8000')
-    al = AutocompleteSelectMultiple(browser, 'select-multiple')
+    al = AutocompleteSelectMultiple(browser, name)
 
     al.assert_selected(('aaa', 0), ('bbb', 3))
+
+    # ensure selected choices are hidden
+    al.focus()
+    assert not any([
+        choice.text in ('aaa', 'bbb')
+        for choice in al.choices()
+    ])
 
     # deselect the first option
     al.unselect(0)
@@ -124,3 +137,10 @@ def test_select_multiple(browser):
 
     # should it all be like in the beginning but with this other value
     al.assert_selected(('bbb', 3), ('abb', 2))
+
+    # ensure selected choices are hidden
+    al.focus()
+    assert not any([
+        choice.text in ('bbb', 'abb')
+        for choice in al.choices()
+    ])

@@ -5,6 +5,10 @@ class AutocompleteLight extends HTMLElement {
   input = null
   box = null
 
+  get input() {
+    return this.querySelector('autocomplete-light')
+  }
+
   connectedCallback() {
     this.input = this.querySelector('[slot=input]')
     if (!this.input) return setTimeout(this.connectedCallback.bind(this), 100)
@@ -70,26 +74,15 @@ class AutocompleteLight extends HTMLElement {
     this.box.setAttribute('hidden', 'true')
   }
 
+  get url() {
+    return this.getAttribute('url') + '?q=' + this.input.value
+  }
+
   download() {
-    if (this.url) {
-      this.xhr = new XMLHttpRequest()
-      this.xhr.addEventListener('load', this.receive.bind(this))
-      this.xhr.open('GET', this.url + '?q=' + this.input.value)
-      this.xhr.send()
-    } else {
-      // No URL ? Try to receive from option tags of parent node
-      this.receive({
-        target: {
-          response: Array.from(
-              this.parentNode.querySelectorAll('option')
-          ).filter(
-            (item) => item.innerText.startsWith(this.input.value)
-          ).map(
-            (item) => `<div data-value="${item.getAttribute('value')}">${item.innerHTML}</div>`
-          ).join('\n'),
-        }
-      })
-    }
+    this.xhr = new XMLHttpRequest()
+    this.xhr.addEventListener('load', this.receive.bind(this))
+    this.xhr.open('GET', this.url)
+    this.xhr.send()
   }
 
   keyboard(ev) {
@@ -172,10 +165,6 @@ class AutocompleteLight extends HTMLElement {
     return this.box.querySelectorAll(this.choiceSelector + '.hilight')
   }
 
-  get url() {
-    return this.getAttribute('url')
-  }
-
   get choiceSelector() {
     return this.getAttribute('choice-selector') || '[data-value]'
   }
@@ -238,6 +227,37 @@ class AutocompleteLight extends HTMLElement {
   }
 }
 
+
+class AutocompleteSelectInput extends AutocompleteLight {
+  get url() {
+    var url = this.getAttribute('url') + '?q=' + this.input.value
+    this.parentNode.querySelectorAll('option[selected]').forEach((option) => {
+      url += '&_=' + option.value
+    })
+    return url
+  }
+
+  download() {
+    if (this.url) {
+      return super.download()
+    }
+
+    // No URL ? Try to receive from option tags of parent node
+    this.receive({
+      target: {
+        response: Array.from(
+          this.parentNode.querySelectorAll('option')
+        ).filter(
+          (item) => !item.selected && item.innerText.startsWith(this.input.value)
+        ).map(
+          (item) => `<div data-value="${item.getAttribute('value')}">${item.innerHTML}</div>`
+        ).join('\n'),
+      }
+    })
+
+  }
+}
+
 class AutocompleteSelect extends HTMLElement {
   maxChoices = 0
   bound = false
@@ -265,7 +285,7 @@ class AutocompleteSelect extends HTMLElement {
       var exists = this.deck.querySelectorAll(
         '[data-value="' + option.getAttribute('value') + '"]'
       )
-      if (exists) return
+      if (exists.length) return
       var cmp = document.createElement('div')
       cmp.setAttribute('selected', 'selected')
       cmp.setAttribute('data-value', option.getAttribute('value'))
@@ -299,7 +319,7 @@ class AutocompleteSelect extends HTMLElement {
   }
 
   get input() {
-    return this.querySelector('autocomplete-light')
+    return this.querySelector('autocomplete-select-input, autocomplete-light')
   }
 
   onClearClick(ev) {
@@ -383,4 +403,5 @@ class AutocompleteSelect extends HTMLElement {
 }
 
 window.customElements.define('autocomplete-light', AutocompleteLight);
+window.customElements.define('autocomplete-select-input', AutocompleteSelectInput);
 window.customElements.define('autocomplete-select', AutocompleteSelect);
