@@ -4,6 +4,8 @@ Test script helpers in Python.
 Not necessary to run autocomplete-light.js
 """
 
+from selenium.webdriver.common.by import By
+
 
 def retry(cb, *args, expected=None, **kwargs):
     i = 15
@@ -92,7 +94,7 @@ class AutocompleteSelect(AutocompleteLight):
         )
 
     def unselect(self, index):
-        self.selected()[index].find_element_by_tag_name('span').click()
+        self.selected()[index].find_element(By.TAG_NAME, 'span').click()
 
     def assert_selected(self, label, value):
         # get selected choices from deck
