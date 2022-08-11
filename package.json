@@ -1,6 +1,6 @@
 {
   "name": "autocomplete-light",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Extremely lightweight autocompletion web component",
   "main": "autocomplete-light.js",
   "type": "module",
