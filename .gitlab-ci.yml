@@ -2,8 +2,8 @@ py-test:
   stage: test
   image: yourlabs/python-arch
   script:
-  - pacman -Syu --noconfirm python-selenium geckodriver firefox
-  - pip install pytest-splinter
+  - pacman -Syu --noconfirm geckodriver firefox
+  - pip install pytest-splinter selenium
   - python serve.py &
   - py.test -sv --splinter-headless
 
