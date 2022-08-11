@@ -3,7 +3,8 @@ py-test:
   image: yourlabs/python-arch
   script:
   - pacman -Syu --noconfirm geckodriver firefox
-  - pip install pytest-splinter selenium
+  - pip install selenium
+  - pip install https://github.com/pytest-dev/pytest-splinter/archive/master.tar.gz
   - python serve.py &
   - py.test -sv --splinter-headless
 
