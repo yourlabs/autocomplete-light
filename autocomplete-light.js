@@ -247,7 +247,7 @@ class AutocompleteSelectInput extends AutocompleteLight {
     this.receive({
       target: {
         response: Array.from(
-          this.parentNode.querySelectorAll('option')
+          this.closest('autocomplete-select').select.options
         ).filter(
           (item) => !item.selected && item.innerText.startsWith(this.input.value)
         ).map(
