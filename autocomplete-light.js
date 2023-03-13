@@ -230,6 +230,7 @@ class AutocompleteLight extends HTMLElement {
 
 class AutocompleteSelectInput extends AutocompleteLight {
   get url() {
+    if (!this.getAttribute('url')) return
     var url = this.getAttribute('url') + '?q=' + this.input.value
     this.parentNode.querySelectorAll('option[selected]').forEach((option) => {
       url += '&_=' + option.value
