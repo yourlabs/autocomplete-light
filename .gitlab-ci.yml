@@ -27,6 +27,7 @@ pypi:
   stage: deploy
   script: |
     mkdir -p autocomplete_light/static/autocomplete_light
+    cp autocomplete-light.{js,css} autocomplete_light/static/autocomplete_light
     touch autocomplete_light/__init__.py
     pypi-release
   only: [tags]
