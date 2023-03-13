@@ -25,5 +25,8 @@ pages:
 pypi:
   image: yourlabs/python
   stage: deploy
-  script: pypi-release
+  script: |
+    mkdir -p autocomplete_light/static/autocomplete_light
+    touch autocomplete_light/__init__.py
+    pypi-release
   only: [tags]
