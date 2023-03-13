@@ -325,6 +325,8 @@ class AutocompleteSelect extends HTMLElement {
 
   onClearClick(ev) {
     this.choiceUnselect(ev.target.parentNode)
+    ev.preventDefault()
+    ev.stopPropagation()
   }
 
   choiceUnselect(choice, noShowHide = false) {
