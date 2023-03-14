@@ -41,16 +41,14 @@ autocomplete-select [slot=deck] {
 autocomplete-select [slot=deck] [data-value] {
   margin: 4px;
   border-radius: 4px;
-  font-size: .875rem;
   background-color: #f5f5f5;
   letter-spacing: .0178571429em;
   color: rgba(0,0,0,.87);
   cursor: pointer;
-  line-height: 1.25rem;
   display: inline-flex;
   position: relative;
   box-sizing: border-box;
-  padding: 0 12px;
+  padding: 0 8px;
   height: 32px;
   align-items: center;
 }
