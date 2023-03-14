@@ -58,4 +58,5 @@ autocomplete-select [slot=deck] [data-value] {
 
 autocomplete-select [slot=deck] .clear {
   padding-left: 5px;
+  font-weight: 600;
 }

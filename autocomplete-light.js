@@ -400,7 +400,7 @@ class AutocompleteSelect extends HTMLElement {
     var clear = document.createElement('span')
     clear.classList.add('clear')
     clear.addEventListener('click', this.onClearClick.bind(this))
-    clear.innerHTML = '✖'
+    clear.innerHTML = '❌'
     choice.appendChild(clear)
   }
 }
