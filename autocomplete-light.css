@@ -18,7 +18,7 @@
 }
 
 .autocomplete-light-box .hilight {
-  background-color: lightgrey;
+  background-color: #f5f5f5;
 }
 
 autocomplete-select select {
@@ -40,9 +40,9 @@ autocomplete-select [slot=deck] {
 
 autocomplete-select [slot=deck] [data-value] {
   margin: 4px;
-  border-radius: 16px;
+  border-radius: 4px;
   font-size: .875rem;
-  background-color: #e0e0e0;
+  background-color: #f5f5f5;
   letter-spacing: .0178571429em;
   color: rgba(0,0,0,.87);
   cursor: pointer;
